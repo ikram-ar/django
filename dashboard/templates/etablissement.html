@@ -14,48 +14,6 @@
     </div>
 </div>
 
-<div class="col-md-12">
-    <span><a href="{% url 'dashboard:ajouter_etablissement' %}">Ajouter un établissement</a>
-    </span>  
-    <div class="table-responsive">
-        <table id="bootstrapdatatable" class="table table-striped table-bordered" width="100%">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="checkall" /></th>
-                    <th>ID</th>
-                    <th>Establishment Name</th>
-                    <th>Manager Name</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for establishment in establishments %}  
-                <tr>  
-                    <td><input type="checkbox" class="checkthis" /></td>
-                    <td>{{ establishment.id }}</td>  
-                    <td>{{ establishment.name }}</td>  
-                    <td>{{ establishment.manager_name }}</td>  
-                    <td>{{ establishment.email }}</td>  
-                    <td>{{ establishment.phone_number }}</td>  
-                    <td><a href="{% url 'edit_establishment' establishment.id %}" class="btn btn-primary">Edit</a></td>
-                    <td><a href="{% url 'delete_establishment' establishment.id %}" class="btn btn-danger">Delete</a></td>  
-                </tr>  
-                {% endfor %} 
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<script>
-    // DataTables initialization
-    $(document).ready(function() {
-        $('#bootstrapdatatable').DataTable();
-    });
-</script>
-
 
 <!-- Specific content for Établissement page -->
 {% endblock %}

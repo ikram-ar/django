@@ -5,14 +5,13 @@ from .models import Establishment
 class NormalUserForm(forms.ModelForm):
     class Meta:
         model = NormalUser
-        fields = ['username', 'email', 'first_name', 'last_name', 'phone_number', 'is_active']
+        fields = ['username', 'email', 'first_name', 'last_name', 'phone_number']
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
 class EstablishmentForm(forms.ModelForm):

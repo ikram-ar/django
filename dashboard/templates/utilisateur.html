@@ -18,17 +18,19 @@
 
 <!-- Specific content for Utilisateur page -->
 <div class="col-md-12">
-    <span><a class="btn btn-primary">Add New User</a></span>  
+    <span><a href="{% url 'dashboard:add_user' %}" class="btn btn-primary">Add New User</a></span>  
     <div class="table-responsive">
         <table id="users_table" class="table table-striped table-bordered" width="100%">
             <thead>
-                <th><input type="checkbox" id="checkall" /></th>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Phone Number</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <tr>
+                    <th><input type="checkbox" id="checkall" /></th>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
             </thead>
             <tbody>
                 {% for user in users %}
@@ -38,24 +40,62 @@
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.phone_number }}</td>
-                        <td><a  class="btn btn-primary">Edit</a></td>
-                        <td><a  class="btn btn-danger">Delete</a></td>
+                        <td><a href="{% url 'dashboard:edit_user' user.id %}" class="btn btn-primary">Edit</a></td>
+                        <td>
+                            <button class="btn btn-danger delete-btn" data-id="{{ user.id }}">Delete</button>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
-<!-- Include DataTables CSS -->
-<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
 
-<!-- Include jQuery and DataTables JS -->
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this user?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="#" class="btn btn-danger" id="confirmDelete">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Bootstrap CSS and JS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
     $(document).ready(function() {
-        $('#users_table').DataTable();  // Initialize the DataTable for users
+        $('#users_table').DataTable(); 
+        
+        var deleteModal = $('#deleteModal');
+        
+        // Show the modal when a delete button is clicked
+        $('.delete-btn').on('click', function() {
+            var userId = $(this).data('id');
+            var url = "{% url 'dashboard:delete_user' 0 %}".slice(0, -2) + userId;
+            $('#confirmDelete').attr('href', url);
+            deleteModal.modal('show');
+        });
+
+        // Hide the modal when the cancel button or close button is clicked
+        deleteModal.find('.btn-secondary, .close').on('click', function() {
+            deleteModal.modal('hide');
+        });
     });
 </script>
 
@@ -161,5 +201,4 @@
     }
 </style>
 
-<!-- Specific content for Utilisateur page -->
 {% endblock %}
