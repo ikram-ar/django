@@ -8,7 +8,7 @@ class NormalUser(models.Model):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
-    phone_number = models.CharField(verbose_name="Numéro de téléphone", max_length=20)
+    phone_number = models.CharField(verbose_name="Numéro de téléphone", max_length=20, default="1234567890")
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
@@ -24,7 +24,7 @@ class Establishment(models.Model):
     address = models.CharField(verbose_name="Adresse", max_length=100)
     nif_cin = models.CharField(verbose_name="NIF_CIN", max_length=9, null=True)
     rc_license = models.CharField(verbose_name="RC", max_length=12, blank=True, null=True)
-    phone_number = models.CharField(verbose_name="Numéro de téléphone", max_length=20)
+    phone_number = models.CharField(verbose_name="Numéro de téléphone", max_length=20, default="1234567890")
     email = models.EmailField(max_length=100, blank=True, null=True)
     description = models.TextField(max_length=500, blank=True, null=True)
     image = models.ImageField(verbose_name="Photo de couverture", upload_to="images/establishments", blank=False, null=True)

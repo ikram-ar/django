@@ -1,5 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+
+from dashboard.forms import EstablishmentForm
+from dashboard.models import NormalUser
 
 @login_required
 
@@ -15,11 +18,16 @@ def etablissement_view(request):
     }
     return render(request, 'etablissement.html', context)
 
+
 def utilisateur_view(request):
+    users = NormalUser.objects.all()
     context = {
         'current_section': 'utilisateur',
+        'users': users,  # Pass the actual 'users' queryset here
     }
+    print(users)
     return render(request, 'utilisateur.html', context)
+
 
 def groupes_view(request):
     context = {
