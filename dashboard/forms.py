@@ -44,11 +44,11 @@ class EstablishmentForm(forms.ModelForm):
             'is_managed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
+
 class UserGroupForm(forms.ModelForm):
     class Meta:
         model = UserGroup
         fields = ['name', 'users']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'users': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'users': forms.CheckboxSelectMultiple,
         }

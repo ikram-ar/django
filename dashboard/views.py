@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.db.models.deletion import ProtectedError
 from dashboard.forms import EstablishmentForm, NormalUserForm
-from dashboard.models import Establishment, NormalUser
+from dashboard.models import Establishment, NormalUser, UserGroup
 
 @login_required
 
@@ -26,15 +26,11 @@ def utilisateur_view(request):
     return render(request, 'utilisateur.html', context)
 
 
-def groupes_view(request):
-    context = {
-        'current_section': 'groupes',
-    }
-    return render(request, 'groupe.html', context)
+
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import NormalUserForm  # Adjust this import according to your project structure
+from .forms import NormalUserForm, UserGroupForm  # Adjust this import according to your project structure
 
 def add_user(request):
     if request.method == 'POST':
@@ -100,7 +96,7 @@ def add_etablissement(request):
             messages.error(request, "Error adding the établissement.")
     else:
         form = EstablishmentForm()
-    return render(request, 'add_etablissement.html', {'form': form})
+    return render(request, 'add_etablissement.html', {'form': form, 'current_section': 'etablissement'})
 
 def edit_etablissement(request, etablissement_id):
     etablissement = get_object_or_404(Establishment, pk=etablissement_id)
@@ -114,10 +110,52 @@ def edit_etablissement(request, etablissement_id):
             messages.error(request, "Error updating the établissement.")
     else:
         form = EstablishmentForm(instance=etablissement)
-    return render(request, 'edit_etablissement.html', {'form': form, 'etablissement': etablissement})
+    return render(request, 'edit_etablissement.html', {'form': form, 'etablissement': etablissement ,'current_section': 'etablissement'})
 
 def delete_etablissement(request, etablissement_id):
     etablissement = get_object_or_404(Establishment, pk=etablissement_id)
     etablissement.delete()
     messages.success(request, "Établissement deleted successfully!")
     return redirect('dashboard:etablissement')
+
+#####
+
+def groupes_view(request):
+    usergroups = UserGroup.objects.all()
+    return render(request, 'groupes.html', {'usergroups': usergroups, 'current_section': 'groupes',})
+
+# Add UserGroup
+def usergroup_add(request):
+    if request.method == 'POST':
+        form = UserGroupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User Group added successfully!")
+            return redirect('dashboard:groupes')
+        else:
+            messages.error(request, "Error adding the User Group.")
+    else:
+        form = UserGroupForm()
+    return render(request, 'add_usergroup.html', {'form': form, 'current_section': 'usergroup'})
+
+# Edit UserGroup
+def usergroup_edit(request, pk):
+    usergroup = get_object_or_404(UserGroup, pk=pk)
+    if request.method == 'POST':
+        form = UserGroupForm(request.POST, instance=usergroup)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User Group updated successfully!")
+            return redirect('dashboard:groupes')
+        else:
+            messages.error(request, "Error updating the User Group.")
+    else:
+        form = UserGroupForm(instance=usergroup)
+    return render(request, 'edit_usergroup.html', {'form': form, 'usergroup': usergroup, 'current_section': 'usergroup'})
+
+# Delete UserGroup
+def usergroup_delete(request, pk):
+    usergroup = get_object_or_404(UserGroup, pk=pk)
+    usergroup.delete()
+    messages.success(request, "User Group deleted successfully!")
+    return redirect('dashboard:groupes')

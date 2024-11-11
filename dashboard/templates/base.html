@@ -15,13 +15,7 @@
 </head>
 <body>
   
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+
 
 
 <!-- SIDEBAR -->
@@ -49,7 +43,7 @@
                 <span class="text">Utilisateur</span>
             </a>
         </li>
-        <li class="{% if current_section == 'groupes' %}active{% endif %}">
+        <li class="{% if current_section == 'usergroup' %}active{% endif %}">
             <a href="{% url 'dashboard:groupes' %}">
                 <i class='bx bxs-group'></i>
                 <span class="text">Groupes d'Utilisateurs</span>
@@ -86,10 +80,7 @@
         </form>
         <input type="checkbox" id="switch-mode" hidden>
         <label for="switch-mode" class="switch-mode"></label>
-        <a href="#" class="notification">
-            <i class='bx bxs-bell'></i>
-            <span class="num">8</span>
-        </a>
+        
         <a href="#" class="profile">
             <img src="{% static 'img/people.png' %}" alt="User profile">
         </a>

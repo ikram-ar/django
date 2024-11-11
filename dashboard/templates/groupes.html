@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 
+{% block title %}Groupes d'Utilisateurs{% endblock %}
+
 {% block content %}
 <div class="head-title">
     <div class="left">
-        <h1>Utilisateur</h1>
+        <h1>Groupes d'Utilisateurs</h1>
         <ul class="breadcrumb">
             <li>
-                <a href="#">Utilisateur</a>
+                <a href="#">Groupes d'Utilisateurs</a>
             </li>
             <li><i class='bx bx-chevron-right'></i></li>
             <li>
@@ -16,35 +18,35 @@
     </div>
 </div>
 
-<!-- Specific content for Utilisateur page -->
-
-
+<!-- Add New User Group Button -->
 <div class="col-md-12">
-    <span><a href="{% url 'dashboard:add_user' %}" class="btn btn-custom-green">Add New User</a></span>  
+    <span><a href="{% url 'dashboard:add_usergroup' %}" class="btn btn-custom-green">Add New Group</a></span>  
     <div class="table-responsive">
-        <table id="users_table" class="table table-striped table-bordered" width="100%">
+        <table id="usergroups_table" class="table table-striped table-bordered" width="100%">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="checkall" /></th>
                     <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
+                    <th>Group Name</th>
+                    <th>Users</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
-                {% for user in users %}
+                {% for group in usergroups %}
                     <tr>
                         <td><input type="checkbox" class="checkthis" /></td>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.phone_number }}</td>
-                        <td><a href="{% url 'dashboard:edit_user' user.id %}" class="btn btn-primary"><i class="fas fa-pen"></i></a></td>
+                        <td>{{ group.id }}</td>
+                        <td>{{ group.name }}</td>
                         <td>
-                            <button class="btn btn-danger delete-btn" data-id="{{ user.id }}"><i class="fas fa-trash-alt"></i></button>
+                            {% for user in group.users.all %}
+                                <span>{{ user.username }}</span>{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td><a href="{% url 'dashboard:edit_usergroup' group.id %}" class="btn btn-primary"><i class="fas fa-pen"></i></a></td>
+                        <td>
+                            <button class="btn btn-danger delete-btn" data-id="{{ group.id }}"><i class="fas fa-trash-alt"></i></button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -64,7 +66,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this user?
+                Are you sure you want to delete this user group?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -82,7 +84,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#users_table').DataTable({
+        $('#usergroups_table').DataTable({
             "dom": '<"top"f>rt<"bottom"p><"clear">', // Custom DOM layout: f for search, p for pagination
             "paging": false, // Enable pagination
             "info": false, // Disable the "Showing X to Y of Z entries" message
@@ -93,8 +95,8 @@
         
         // Show the modal when a delete button is clicked
         $('.delete-btn').on('click', function() {
-            var userId = $(this).data('id');
-            var url = "{% url 'dashboard:delete_user' 0 %}".slice(0, -2) + userId;
+            var groupId = $(this).data('id');
+            var url = "{% url 'dashboard:delete_usergroup' 0 %}".slice(0, -2) + groupId;
             $('#confirmDelete').attr('href', url);
             deleteModal.modal('show');
         });
@@ -105,7 +107,6 @@
         });
     });
 </script>
-
 
 <style>
 .table-responsive {
@@ -173,12 +174,6 @@
 .btn-custom-green:hover {
     background-color: #218838; /* Darker green on hover */
 }
-
-
-
-
 </style>
-
-
 
 {% endblock %}

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="head-title">
     <div class="left">
-        <h1>Dashboard</h1>
+        
         <ul class="breadcrumb">
             <li>
                 <a href="#">Dashboard</a>
@@ -39,45 +39,191 @@
 
 <div class="table-data">
     <div class="order">
-        <div class="head">
-            <h3>Recent Orders</h3>
-            <i class='bx bx-search'></i>
-            <i class='bx bx-filter'></i>
-        </div>
         <table>
-            <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Date Order</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        
-                        <p>John Doe</p>
-                    </td>
-                    <td>01-10-2021</td>
-                    <td><span class="status completed">Completed</span></td>
-                </tr>
-                <tr>
-                    <td>
-                        
-                        <p>Jane Smith</p>
-                    </td>
-                    <td>01-10-2021</td>
-                    <td><span class="status pending">Pending</span></td>
-                </tr>
-                <tr>
-                    <td>
-                        
-                        <p>Michael Johnson</p>
-                    </td>
-                    <td>01-10-2021</td>
-                    <td><span class="status process">In Process</span></td>
-                </tr>
-            </tbody>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphique à barres empilées avec sélecteur de plage de dates - Commande pour filtrer les dates sélectionnées</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script> <!-- Ajouter le fichier de locale française -->
+    <style>
+        
+
+        /* Centrer le graphique et les éléments de saisie */
+        .chart-container {
+            width: 100%;
+            max-width: 900px;
+            margin-top: 3%;
+			margin-left: 4%;
+        }
+
+        /* Style pour le conteneur du sélecteur de date */
+        .date-picker-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Style pour l'entrée du sélecteur de date */
+        .date-picker {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            color: #1E90FF;
+            font-weight: 500;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background-color: #f9fafb;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+			float: left;
+        }
+
+        /* Effet au survol du sélecteur de date */
+        .date-picker:hover {
+            border-color: #0072ff;
+            cursor: pointer;
+        }
+
+        /* Effet de focus sur le sélecteur de date */
+        .date-picker:focus {
+            outline: none;
+            border-color: #00c6ff;
+            box-shadow: 0 1px 3px rgba(0, 198, 255, 0.7);
+        }
+
+        /* Titre du graphique */
+        .chart-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        /* Style pour le canevas du graphique */
+        canvas {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+
+<div class="date-picker-container">
+    <input type="text" id="dateRangePicker" class="date-picker" placeholder="Sélectionnez la plage de dates" />
+</div>
+
+
+
+<div class="chart-container">
+    <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<div class="chart-title">
+    Graphique à barres empilées - Livraisons, Annulations, En cours
+</div>
+<script>
+    // Données exemple pour le graphique
+    const allData = {
+        labels: [
+            '2024-11-01', '2024-11-02', '2024-11-03', '2024-11-04', '2024-11-05', '2024-11-06',
+            '2024-11-07', '2024-11-08', '2024-11-09', '2024-11-10', '2024-11-11', '2024-11-12',
+            '2024-11-13', '2024-11-14', '2024-11-15', '2024-11-16', '2024-11-17', '2024-11-18',
+            '2024-11-19', '2024-11-20'
+        ],
+        datasets: [
+            {
+                label: 'Livré',
+                data: [5, 8, 6, 7, 9, 18, 10, 12, 14, 16, 18, 20, 22, 8, 5, 12, 15, 18, 10, 11],
+                backgroundColor: '#28a745',  // Changer la couleur du vert en #28a745
+                borderColor: 'rgba(40, 167, 69, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Annulé',
+                data: [2, 3, 4, 1, 2, 3, 1, 2, 2, 3, 1, 4, 3, 2, 1, 5, 2, 4, 1, 2],
+                backgroundColor: '#FD7238',  // Changer la couleur du rouge en #FD7238
+                borderColor: 'rgba(253, 114, 56, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'En cours',
+                data: [6, 5, 7, 4, 3, 8, 7, 5, 6, 4, 9, 6, 7, 8, 5, 7, 6, 8, 5, 9],
+                backgroundColor: '#007bff',  // Changer la couleur jaune en #007bff
+                borderColor: 'rgba(0, 123, 255, 1)',
+                borderWidth: 1
+            }
+        ]
+    };
+
+    let chartData = {...allData}; // Cloner les données initiales
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top'
+                },
+                tooltip: {
+                    enabled: false
+                }
+            },
+            scales: {
+            x: {
+                stacked: true,
+                grid: {
+                    display: false // Remove grid lines from the x-axis
+                }
+            },
+            y: {
+                stacked: true,
+                beginAtZero: true,
+                grid: {
+                    display: false // Remove grid lines from the y-axis
+                }
+            }
+        }
+        }
+    });
+
+    // Initialiser le sélecteur de plage de dates avec flatpickr
+    flatpickr("#dateRangePicker", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        locale: "fr", // Définir la locale sur "fr" pour le français
+        onChange: function(selectedDates) {
+            if (selectedDates.length === 2) {
+                const startDate = selectedDates[0];
+                const endDate = selectedDates[1];
+
+                // Filtrer les données en fonction de la plage sélectionnée
+                const filteredLabels = allData.labels.filter(date => {
+                    const dateObj = new Date(date);
+                    return dateObj >= startDate && dateObj <= endDate;
+                });
+
+                const filteredData = allData.datasets.map(dataset => {
+                    const filteredDatasetData = dataset.data.filter((data, index) => {
+                        const dateObj = new Date(allData.labels[index]);
+                        return dateObj >= startDate && dateObj <= endDate;
+                    });
+                    return {...dataset, data: filteredDatasetData};
+                });
+
+                // Mettre à jour le graphique avec les données filtrées
+                myChart.data.labels = filteredLabels;
+                myChart.data.datasets = filteredData;
+                myChart.update();
+            }
+        }
+    });
+</script>
         </table>
     </div>
 </div>
