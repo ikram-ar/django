@@ -1,28 +1,25 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Boxicons -->
-    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="https://cdn.lineicons.com/3.0/lineicons.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>{% block title %}AdminHub{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Boxicons -->
+        <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="https://cdn.lineicons.com/3.0/lineicons.css">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <title>{% block title %}Logo{% endblock %}</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        
+    </head>
 <body>
-  
-
-
 
 <!-- SIDEBAR -->
 <section id="sidebar">
     <a href="#" class="brand">
-        <i class='bx bxs-smile'></i>
-        <span class="text">AdminHub</span>
+        <i></i>
+        <span class="text">Logo</span>
     </a>
     <ul class="side-menu top">
         <li class="{% if current_section == 'dashboard' %}active{% endif %}">
@@ -43,7 +40,7 @@
                 <span class="text">Utilisateur</span>
             </a>
         </li>
-        <li class="{% if current_section == 'usergroup' %}active{% endif %}">
+        <li class="{% if current_section == 'groupes' %}active{% endif %}">
             <a href="{% url 'dashboard:groupes' %}">
                 <i class='bx bxs-group'></i>
                 <span class="text">Groupes d'Utilisateurs</span>
@@ -74,13 +71,18 @@
         <i class='bx bx-menu'></i>
         <form action="#">
             <div class="form-input">
-                <input type="search" placeholder="Search...">
+                <input type="search" id="search-input" placeholder="Search..." autocomplete="off">
                 <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                <!-- Display filtered search results -->
+                <div id="search-results" class="search-results"></div>
             </div>
         </form>
         <input type="checkbox" id="switch-mode" hidden>
         <label for="switch-mode" class="switch-mode"></label>
-        
+        <a href="#" class="notification">
+            <i class='bx bxs-bell'></i>
+            <span class="num">8</span>
+        </a>
         <a href="#" class="profile">
             <img src="{% static 'img/people.png' %}" alt="User profile">
         </a>
@@ -97,5 +99,109 @@
 <!-- CONTENT -->
 
 <script src="{% static 'js/script.js' %}"></script>
+
+<!-- Inline JavaScript for Interactive Search Filtering with Bold Matching Text -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const items = [
+        { name: "Dashboard", url: "{% url 'dashboard:home' %}" },
+        { name: "Etablissement", url: "{% url 'dashboard:etablissement' %}" },
+        { name: "Utilisateur", url: "{% url 'dashboard:utilisateur' %}" },
+        { name: "Groupes d'Utilisateurs", url: "{% url 'dashboard:groupes' %}" },
+        { name: "Paramètres", url: "#" },
+        { name: "Déconnexion", url: "#" }
+    ];
+
+    const searchInput = document.getElementById("search-input");
+    const resultsContainer = document.getElementById("search-results");
+
+    function boldText(text, query) {
+        const regex = new RegExp(`(${query})`, "gi");
+        return text.replace(regex, "<span class='bold'>$1</span>");
+    }
+
+    function filterItems(query) {
+        // Clear previous results
+        resultsContainer.innerHTML = "";
+
+        if (query.trim() === "") {
+            resultsContainer.style.display = "none";
+            return;
+        }
+
+        // Filter items based on query
+        const filteredItems = items.filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
+
+        // Display results with bold query text
+        if (filteredItems.length > 0) {
+            resultsContainer.style.display = "block";
+            filteredItems.forEach(item => {
+                const resultItem = document.createElement("div");
+                resultItem.classList.add("result-item");
+                resultItem.innerHTML = boldText(item.name, query);
+                resultItem.onclick = () => {
+                    window.location.href = item.url;  // Redirect to the item's URL
+                };
+                resultsContainer.appendChild(resultItem);
+            });
+        } else {
+            resultsContainer.style.display = "none";
+        }
+    }
+
+    searchInput.addEventListener("input", () => {
+        const query = searchInput.value;
+        filterItems(query);
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!event.target.closest(".form-input")) {
+            resultsContainer.style.display = "none";
+        }
+    });
+});
+
+</script>
+
+<style>
+ /* CSS for Enhanced Search Results Display with Bold Matching Text */
+.form-input {
+    position: relative;
+    width: 300px;
+    
+}
+
+#search-results {
+    margin-top: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+.result-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.result-item:hover {
+    background-color: #eaeaea;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+
+    </style>
+
 </body>
 </html>

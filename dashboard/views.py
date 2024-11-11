@@ -87,7 +87,7 @@ def etablissement_view(request):
 
 def add_etablissement(request):
     if request.method == 'POST':
-        form = EstablishmentForm(request.POST)
+        form = EstablishmentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, "Établissement added successfully!")
