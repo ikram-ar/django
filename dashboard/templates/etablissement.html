@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="head-title">
+    <div class="left">
+        <h1>Établissement</h1>
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Établissement</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+                <a class="active" href="#">Home</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Specific content for Établissement page -->
+<div class="col-md-12">
+    <span><a href="{% url 'dashboard:add_etablissement' %}" class="btn btn-custom-green">Add New Établissement</a></span>
+    <div class="table-responsive">
+        <table id="etablissement_table" class="table table-striped table-bordered" width="100%">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="checkall" /></th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone Number</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for etablissement in etablissements %}
+            <tr>
+                <td><input type="checkbox" class="checkthis" /></td>
+                <td>{{ etablissement.id }}</td>
+                <td>{{ etablissement.name }}</td>
+                <td>{{ etablissement.address }}</td>
+                <td>{{ etablissement.phone_number }}</td>
+                <td><a href="{% url 'dashboard:edit_etablissement' etablissement.id %}" class="btn btn-primary"><i class="fas fa-pen"></i></a></td>
+                <td>
+                    <button class="btn btn-danger delete-btn" data-id="{{etablissement.id }}"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this établissement?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="#" class="btn btn-danger" id="confirmDelete">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Bootstrap CSS and JS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#etablissement_table').DataTable({
+            "dom": '<"top"f>rt<"bottom"p><"clear">', // Custom DOM layout: f for search, p for pagination
+            "paging": false, // Enable pagination
+            "info": false, // Disable the "Showing X to Y of Z entries" message
+            "lengthChange": false, // Disable the "Show entries" dropdown
+        }); 
+        
+        var deleteModal = $('#deleteModal');
+        
+        // Show the modal when a delete button is clicked
+        $('.delete-btn').on('click', function() {
+            var etablissementId = $(this).data('id');
+            var url = "{% url 'dashboard:delete_etablissement' 0 %}".slice(0, -2) + etablissementId;
+            $('#confirmDelete').attr('href', url);
+            deleteModal.modal('show');
+        });
+
+        // Hide the modal when the cancel button or close button is clicked
+        deleteModal.find('.btn-secondary, .close').on('click', function() {
+            deleteModal.modal('hide');
+        });
+    });
+</script>
+
+<style>
+.table-responsive {
+    max-height: 500px; /* Adjust the height as needed */
+    overflow-x: auto;  /* Enables horizontal scrolling */
+    overflow-y: hidden; /* Hides the vertical scrollbar */
+}
+   
+/* Style the container for search and pagination to align them on the right */
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_paginate {
+    float: right; /* Float both search and pagination to the right */
+    margin-top: 10px; /* Add some margin to the top */
+}
+
+/* Style the search box (filter input) */
+.dataTables_filter input {
+    width: 250px; /* Adjust width */
+    padding: 8px; /* Add padding for better spacing */
+    font-size: 10px; /* Adjust font size */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    margin-bottom: 10px; /* Space below the search box */
+}
+
+.dataTables_filter input:focus {
+    border-color: #007bff; /* Change border color on focus */
+    outline: none; /* Remove outline */
+}
+
+/* Style the pagination buttons (previous/next) */
+.dataTables_paginate .paginate_button {
+    padding: 5px 10px; /* Adjust padding */
+    margin: 0 5px; /* Add space between buttons */
+    font-size: 14px; /* Adjust font size */
+    
+    color: #007bff; /* Button text color */
+    
+}
+
+.dataTables_paginate .paginate_button:hover {
+    background-color: #007bff; /* Background color on hover */
+    color: #fff; /* White text on hover */
+    border-color: #007bff; /* Border color on hover */
+}
+
+/* Style the active page button */
+.dataTables_paginate .paginate_button.current {
+    background-color: #007bff; /* Active button background color */
+    color: #fff; /* Active button text color */
+    border-color: #007bff; /* Active button border color */
+}
+
+/* Optional: Add some margin to the bottom of the table */
+.table-responsive {
+    margin-bottom: 20px;
+}
+
+.btn-custom-green {
+    background-color: #28a745; /* Green color */
+    color: white; /* White text */
+    border: none; /* Remove border */
+}
+
+.btn-custom-green:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+/* Mode sombre pour le texte du tableau d'Établissement */
+body.dark #etablissement_table thead th,
+body.dark #etablissement_table tbody td {
+    color: #ffffff; /* Texte en blanc */
+}
+
+</style>
+
+{% endblock %}
