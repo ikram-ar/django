@@ -13,6 +13,12 @@ class NormalUserForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
         }
+        labels = {
+            'username': 'Nom d\'utilisateur',
+            'email': 'Adresse email',
+            'first_name': 'Prénom',
+            'last_name': 'Nom',
+        }
 
 from django import forms
 from .models import Establishment
@@ -54,4 +60,8 @@ class UserGroupForm(forms.ModelForm):
         fields = ['name', 'users']
         widgets = {
             'users': forms.CheckboxSelectMultiple,
+        }
+        labels = {
+            'name': 'Nom',
+            'users': 'Utilisateurs',
         }

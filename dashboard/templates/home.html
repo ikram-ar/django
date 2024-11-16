@@ -5,7 +5,6 @@
 {% block content %}
 <div class="head-title">
     <div class="left">
-        
         <ul class="breadcrumb">
             <li>
                 <a href="#">Dashboard</a>
@@ -19,22 +18,22 @@
 </div>
 
 <ul class="box-info">
+    <!-- Utilisateur Box -->
     <li>
-        <!-- Icône pour User -->
         <span class="icon"><i class='lni lni-user'></i></span>
         <span class="text">
-            <h3>1020</h3>
-            <p>Utilisateur</p>
+            <h3>{{ user_count }}</h3>  <!-- Use the dynamic user count here -->
+            <p>Utilisateurs</p>
         </span>
     </li>
+    <!-- Chiffre d'affaire Box -->
     <li>
-        <!-- Icône pour Chiffre d'affaire -->
         <span class="icon"><i class='lni lni-money-location'></i></span>
         <span class="text">
             <h3>2834</h3>
             <p>Chiffre d'affaire</p>
         </span>
-    </li>
+    </li>
 </ul>
 
 <div class="table-data">
@@ -47,35 +46,33 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script> <!-- Ajouter le fichier de locale française -->
     <style>
-        
-
         /* Centrer le graphique et les éléments de saisie */
         .chart-container {
             width: 100%;
             max-width: 900px;
-            margin-top: 3%;
-			margin-left: 4%;
+            margin: 0 auto;
+            padding: 1rem;
+            position: relative;
         }
 
         /* Style pour le conteneur du sélecteur de date */
         .date-picker-container {
             text-align: center;
-            margin: 20px 0;
+            margin: 10px 0;
         }
 
         /* Style pour l'entrée du sélecteur de date */
         .date-picker {
-            width: 300px;
+            width: 250px;
             padding: 10px;
             font-size: 16px;
-            color: #1E90FF;
+            color: black;
             font-weight: 500;
             border: 2px solid #E5E7EB;
             border-radius: 10px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             background-color: #f9fafb;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
-			
         }
 
         /* Effet au survol du sélecteur de date */
@@ -101,21 +98,28 @@
 
         /* Style pour le canevas du graphique */
         canvas {
+            width: 100% !important;
+            height: auto !important;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
+        /* Ajouter un style pour le wrapper du canvas pour le rendre scrollable horizontalement sur les petits écrans */
+        .canvas-wrapper {
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
     </style>
 </head>
-
 
 <div class="date-picker-container">
     <input type="text" id="dateRangePicker" class="date-picker" placeholder="Sélectionnez la plage de dates" />
 </div>
 
-
-
 <div class="chart-container">
-    <canvas id="myChart"></canvas>
+    <div class="canvas-wrapper">
+        <canvas id="myChart"></canvas>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -127,30 +131,25 @@
 <script>
     // Données exemple pour le graphique
     const allData = {
-        labels: [
-            '2024-11-01', '2024-11-02', '2024-11-03', '2024-11-04', '2024-11-05', '2024-11-06',
-            '2024-11-07', '2024-11-08', '2024-11-09', '2024-11-10', '2024-11-11', '2024-11-12',
-            '2024-11-13', '2024-11-14', '2024-11-15', '2024-11-16', '2024-11-17', '2024-11-18',
-            '2024-11-19', '2024-11-20'
-        ],
+        labels: {{dates|safe}},
         datasets: [
             {
                 label: 'Livré',
-                data: [5, 8, 6, 7, 9, 18, 10, 12, 14, 16, 18, 20, 22, 8, 5, 12, 15, 18, 10, 11],
+                data: {{livre|safe}},
                 backgroundColor: '#28a745',  // Changer la couleur du vert en #28a745
                 borderColor: 'rgba(40, 167, 69, 1)',
                 borderWidth: 1
             },
             {
                 label: 'Annulé',
-                data: [2, 3, 4, 1, 2, 3, 1, 2, 2, 3, 1, 4, 3, 2, 1, 5, 2, 4, 1, 2],
+                data: {{annule|safe}},
                 backgroundColor: '#FD7238',  // Changer la couleur du rouge en #FD7238
                 borderColor: 'rgba(253, 114, 56, 1)',
                 borderWidth: 1
             },
             {
                 label: 'En cours',
-                data: [6, 5, 7, 4, 3, 8, 7, 5, 6, 4, 9, 6, 7, 8, 5, 7, 6, 8, 5, 9],
+                data: {{en_cours|safe}},
                 backgroundColor: '#007bff',  // Changer la couleur jaune en #007bff
                 borderColor: 'rgba(0, 123, 255, 1)',
                 borderWidth: 1
@@ -166,29 +165,36 @@
         data: chartData,
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     position: 'top'
                 },
                 tooltip: {
-                    enabled: false
+                    enabled: true
                 }
             },
             scales: {
-            x: {
-                stacked: true,
-                grid: {
-                    display: false // Remove grid lines from the x-axis
-                }
-            },
-            y: {
-                stacked: true,
-                beginAtZero: true,
-                grid: {
-                    display: false // Remove grid lines from the y-axis
+                x: {
+                    stacked: true,
+                    grid: {
+                        display: false // Remove grid lines from the x-axis
+                    },
+                    ticks: {
+                        maxRotation: 0, // Disable rotation on x-axis labels
+                        minRotation: 0,
+                        autoSkip: true,
+                        maxTicksLimit: 5 // Show a limited number of labels to avoid clutter
+                    }
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    grid: {
+                        display: false // Remove grid lines from the y-axis
+                    }
                 }
             }
-        }
         }
     });
 
@@ -210,21 +216,29 @@
 
                 const filteredData = allData.datasets.map(dataset => {
                     const filteredDatasetData = dataset.data.filter((data, index) => {
-                        const dateObj = new Date(allData.labels[index]);
-                        return dateObj >= startDate && dateObj <= endDate;
+                        const date = new Date(allData.labels[index]);
+                        return date >= startDate && date <= endDate;
                     });
-                    return {...dataset, data: filteredDatasetData};
+                    return {
+                        ...dataset,
+                        data: filteredDatasetData
+                    };
                 });
 
-                // Mettre à jour le graphique avec les données filtrées
+                // Mettre à jour les données du graphique avec les données filtrées
                 myChart.data.labels = filteredLabels;
                 myChart.data.datasets = filteredData;
                 myChart.update();
             }
         }
     });
+
+    // Fonction pour redimensionner le graphique
+    function resizeChart() {
+        myChart.resize();
+    }
+
+    // Redimensionner le graphique lors du redimensionnement de la fenêtre
+    window.addEventListener('resize', resizeChart);
 </script>
-        </table>
-    </div>
-</div>
 {% endblock %}

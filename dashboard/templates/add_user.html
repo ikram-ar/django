@@ -12,7 +12,8 @@
         <div class="table-data">
             {{ form.as_p }}
         </div>
-        <button type="submit" class="btn btn-primary custom-btn">Ajouter un utilisateur</button>
+        <button type="submit" class="btn btn-primary custom-btn">Ajouter</button>
+        <a href="{% url 'dashboard:utilisateur' %}" class="btn btn-secondary cancel-btn">Annuler</a>
     </form>
 </div>
 <style>
@@ -72,5 +73,23 @@ h2.text-center {
     background-color: rgb(1, 109, 1);
     transform: scale(1.05);
 }
+.btn.cancel-btn {
+        background-color: #007bff; /* Blue for cancel */
+        color: #fff;
+        border: none;
+        padding: 7.4px 15px;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        display: inline-block;
+        margin: 5px;
+        margin-left: 20px;
+        text-decoration: none;
+    }
+
+    .btn.cancel-btn:hover {
+        background-color: #0460c2; /* Darker blue on hover */
+        transform: scale(1.05);
+    }
 </style>
 {% endblock %}

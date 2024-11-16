@@ -6,19 +6,15 @@
 <div class="head-title">
     <div class="left">
         <h1>Groupes d'Utilisateurs</h1>
-        <ul class="breadcrumb">
+        <ul>
             <li>
-                <a href="#">Groupes d'Utilisateurs</a>
-            </li>
-            <li><i class='bx bx-chevron-right'></i></li>
-            <li>
-                <a class="active" href="#">Accueil</a>
+                <i class='bx bx-chevron-right'></i>
+                <a class="active" href="{% url 'dashboard:home' %}">Accueil</a>
             </li>
         </ul>
     </div>
 </div>
 
-<!-- Bouton Ajouter un Nouveau Groupe -->
 <div class="col-md-12">
     <span><a href="{% url 'dashboard:add_usergroup' %}" class="btn btn-custom-green">Ajouter un Groupe</a></span>  
     <div class="table-responsive">
@@ -44,9 +40,9 @@
                                 <span>{{ user.username }}</span>{% if not forloop.last %}, {% endif %}
                             {% endfor %}
                         </td>
-                        <td><a href="{% url 'dashboard:edit_usergroup' group.id %}" class="btn btn-primary"><i class="fas fa-pen"></i></a></td>
+                        <td><a href="{% url 'dashboard:edit_usergroup' group.id %}" class="btn btn-primary pen-btn"><i class="fas fa-pen"></i></a></td>
                         <td>
-                            <button class="btn btn-danger delete-btn" data-id="{{ group.id }}"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn btn-danger delete-btn trash-btn" data-id="{{ group.id }}"><i class="fas fa-trash-alt"></i></button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -88,7 +84,11 @@
             "dom": '<"top"f>rt<"bottom"p><"clear">', 
             "paging": false, 
             "info": false, 
-            "lengthChange": false, 
+            "lengthChange": false,
+            language: {
+                search: "Chercher:",
+                zeroRecords: "Aucun enregistrement correspondant trouvé"
+            }
         }); 
         
         var deleteModal = $('#deleteModal');
@@ -108,48 +108,29 @@
 
 <style>
 .table-responsive {
-    max-height: 500px; 
-    overflow-x: auto;  
-    overflow-y: hidden; 
+    max-height: 500px;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
-   
+
 .dataTables_wrapper .dataTables_filter,
 .dataTables_wrapper .dataTables_paginate {
-    float: right; 
-    margin-top: 10px; 
+    float: right;
+    margin-top: 3%;
 }
 
 .dataTables_filter input {
-    width: 250px; 
-    padding: 8px; 
-    font-size: 10px; 
-    border: 1px solid #ccc; 
-    border-radius: 8px; 
-    margin-bottom: 10px; 
+    width: 250px;
+    padding: 8px;
+    font-size: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
 .dataTables_filter input:focus {
-    border-color: #007bff; 
-    outline: none; 
-}
-
-.dataTables_paginate .paginate_button {
-    padding: 5px 10px; 
-    margin: 0 5px; 
-    font-size: 14px; 
-    color: #007bff; 
-}
-
-.dataTables_paginate .paginate_button:hover {
-    background-color: #007bff; 
-    color: #fff; 
-    border-color: #007bff; 
-}
-
-.dataTables_paginate .paginate_button.current {
-    background-color: #007bff; 
-    color: #fff; 
-    border-color: #007bff; 
+    border-color: #007bff;
+    outline: none;
 }
 
 .table-responsive {
@@ -157,13 +138,76 @@
 }
 
 .btn-custom-green {
-    background-color: #28a745; 
-    color: white; 
-    border: none; 
+    background-color: green;
+    color: white;
+    border: none;
+    margin-top: 3%;
 }
 
 .btn-custom-green:hover {
-    background-color: #218838; 
+    background-color: #218838;
+    color: white;
+}
+
+td, th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.pen-btn i {
+    color: blue;
+}
+
+.trash-btn i {
+    color: red;
+}
+
+.pen-btn i:hover, .trash-btn i:hover {
+    color: white;
+}
+
+.pen-btn, .trash-btn {
+    background-color: transparent;
+    border: none;
+}
+
+@media (max-width: 800px) {
+    .dataTables_wrapper .dataTables_filter {
+        float: left;
+        width: 100%;
+        margin-top: 10px;
+        padding-top: 15px;
+    }
+    
+    .dataTables_filter input {
+        width: calc(100% - 16px);
+        margin: 0;
+    }
+    
+    .btn-custom-green {
+        font-size: small;
+        border: none;
+    }
+}
+
+body.dark table, body.dark th, body.dark td {
+    background-color: #0C0C1E;
+    color: #fff;
+}
+/* Dark Mode Styles for DataTable */
+body.dark .dataTables_filter input {
+    background-color: #151529;
+    color: #fff;
+    border: 1px solid #666;
+}
+
+body.dark .dataTables_filter input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+body.dark .dataTables_filter label {
+    color: #fff;
 }
 </style>
 

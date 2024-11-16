@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 
+{% block title %}Utilisateurs{% endblock %}
+
 {% block content %}
 <div class="head-title">
     <div class="left">
         <h1>Utilisateur</h1>
-        <ul class="breadcrumb">
-            <li>
+        <ul>
+            <!-- <li>
                 <a href="#">Utilisateur</a>
-            </li>
-            <li><i class='bx bx-chevron-right'></i></li>
+            </li> -->
+            
             <li>
-                <a class="active" href="#">Accueil</a>
+                <i class='bx bx-chevron-right'></i>
+                <a class="active" href="{% url 'dashboard:home' %}">Accueil</a>
             </li>
         </ul>
     </div>
@@ -39,9 +42,9 @@
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.phone_number }}</td>
-                        <td><a href="{% url 'dashboard:edit_user' user.id %}" class="btn btn-primary"><i class="fas fa-pen"></i></a></td>
+                        <td><a href="{% url 'dashboard:edit_user' user.id %}" class="btn btn-primary pen-btn"><i class="fas fa-pen"></i></a></td>
                         <td>
-                            <button class="btn btn-danger delete-btn" data-id="{{ user.id }}"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn btn-danger delete-btn trash-btn" data-id="{{ user.id }}"><i class="fas fa-trash-alt"></i></button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -82,6 +85,10 @@
             "paging": false,
             "info": false,
             "lengthChange": false,
+            language: {
+            search: "Chercher:",
+            "zeroRecords": "Aucun enregistrement correspondant trouvé"
+        }
         }); 
         
         var deleteModal = $('#deleteModal');
@@ -109,7 +116,7 @@
 .dataTables_wrapper .dataTables_filter,
 .dataTables_wrapper .dataTables_paginate {
     float: right;
-    margin-top: 10px;
+    margin-top: 3%;
 }
 
 .dataTables_filter input {
@@ -126,37 +133,99 @@
     outline: none;
 }
 
-.dataTables_paginate .paginate_button {
-    padding: 5px 10px;
-    margin: 0 5px;
-    font-size: 14px;
-    color: #007bff;
-}
-
-.dataTables_paginate .paginate_button:hover {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
-}
-
-.dataTables_paginate .paginate_button.current {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
-}
 
 .table-responsive {
     margin-bottom: 20px;
 }
 
 .btn-custom-green {
-    background-color: #28a745;
+    background-color: green;
     color: white;
     border: none;
+    margin-top: 3%;
 }
 
 .btn-custom-green:hover {
     background-color: #218838;
+    color: white;
 }
+td{
+    text-align: center; /* Center horizontally */
+    vertical-align: middle; /* Center vertically */
+}
+th{
+    text-align: center; /* Center horizontally */
+    vertical-align: middle; /* Center vertically */
+}
+.pen-btn i {
+    color: blue; /* Set the color of the pen icon */
+}
+
+.trash-btn i {
+    color: red; /* Set the color of the trash icon */
+}
+.pen-btn i:hover, .trash-btn i:hover{
+    color: white; /* Set the color of the pen icon */
+}
+
+.pen-btn {
+    background-color: transparent;
+    border: none;
+}
+
+.trash-btn {
+    background-color: transparent;
+    border: none;
+}
+
+@media (max-width: 800px) {
+    .dataTables_wrapper .dataTables_filter {
+        float: left;
+        width: 100%; /* Ensure it takes the full width on smaller screens */
+        margin-top: 10px;
+        padding-top: 15px;
+    }
+    
+    .dataTables_filter input {
+        width: calc(100% - 16px); /* Adjust width to fit within parent padding */
+        margin: 0; /* Reset margin */
+    }
+    .btn-custom-green {
+    font-size: small;
+    border: none;
+}
+}
+
+body.dark table {
+    background-color: #0C0C1E;
+    color: #fff;
+}
+
+body.dark th {
+    background-color: #0C0C1E;
+    color: #fff;
+}
+
+body.dark td {
+    background-color: #101022;
+    color: #fff;
+}
+/* Dark Mode Styles for DataTable */
+body.dark .dataTables_filter input {
+    background-color: #151529;
+    color: #fff;
+    border: 1px solid #666;
+}
+
+body.dark .dataTables_filter input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+body.dark .dataTables_filter label {
+    color: #fff;
+}
+
+
 </style>
 {% endblock %}

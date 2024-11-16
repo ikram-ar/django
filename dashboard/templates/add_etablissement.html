@@ -1,17 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-5">
     <div class="head-title">
         <div class="left">
-            <h1>Add New Établissement</h1>
+            <h1>Ajouter un nouvel Établissement</h1>
         </div>
     </div>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="table-data">
-            <div class="table-data">
-                {{ form.as_p }}
+            <div class="row">
+                {% for field in form %}
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
 
@@ -27,104 +40,112 @@
             </div>
         {% endif %}
 
-        <button type="submit" class="btn btn-primary update-btn">Add Établissement</button>
-        <a href="{% url 'dashboard:etablissement' %}" class="btn btn-secondary cancel-btn">Cancel</a>
+        <button type="submit" class="btn btn-primary custom-btn">Ajouter un Établissement</button>
+        <a href="{% url 'dashboard:etablissement' %}" class="btn btn-secondary cancel-btn">Annuler</a>
     </form>
 </div>
 
 <style>
-.container {
-    max-width: 900px;
-    margin-left: 1%;
-}
+    .container {
+        max-width: 900px;
+        margin-left: 1%;
+    }
 
-.head-title {
-    text-align: center;
-    margin-bottom: 30px;
-}
+    h2.text-center {
+        color: #343a40;
+        font-size: 24px;
+        font-weight: 600;
+    }
 
-.head-title .left h1 {
-    font-size: 28px;
-    font-weight: bold;
-}
+    .head-title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
 
-.table-data .row {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 -15px;
-}
+    .head-title .left h1 {
+        font-size: 28px;
+        font-weight: bold;
+    }
 
-.table-data .col-md-4 {
-    padding: 0 15px;
-    margin-bottom: 15px;
-}
+    .table-data .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -15px;
+    }
 
-.table-data .form-group {
-    margin-bottom: 15px;
-}
+    .table-data .col-md-4 {
+        padding: 0 15px;
+        margin-bottom: 15px;
+    }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    background-color: #fff;
-    box-shadow: none;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
+    .table-data .form-group {
+        margin-bottom: 15px;
+    }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
-}
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background-color: #fff;
+        box-shadow: none;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
 
-.form-text {
-    font-size: 12px;
-    color: #6c757d;
-}
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+    }
 
-.invalid-feedback {
-    display: block;
-}
+    .form-text {
+        font-size: 12px;
+        color: #6c757d;
+    }
 
-.btn.update-btn {
-    background-color: #28a745;
-    border-color: #28a745;
-    color: white;
-    padding: 10px 20px;
-    font-size: 14px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    box-shadow: none;
-    margin-top: 10px;
-}
+    .invalid-feedback {
+        display: block;
+    }
 
-.btn.update-btn:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
+    .btn.custom-btn {
+        background-color: green; /* Green for adding */
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        display: inline-block;
+        margin-top: 5%;
+        text-decoration: none;
+    }
 
-.btn.cancel-btn {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    color: white;
-    padding: 10px 20px;
-    font-size: 14px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    margin-left: 10px;
-    box-shadow: none;
-    margin-top: 10px;
-}
+    .btn.custom-btn:hover {
+        background-color: #1e7e34; /* Darker green on hover */
+        transform: scale(1.05);
+    }
 
-.btn.cancel-btn:hover {
-    background-color: #5a6268;
-    transform: scale(1.05);
-}
+    .btn.cancel-btn {
+        background-color: #007bff; /* Blue for cancel */
+        color: #fff;
+        border: none;
+        padding: 7.4px 15px;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        display: inline-block;
+        margin: 5px;
+        margin-left: 20px;
+        text-decoration: none;
+    }
+
+    .btn.cancel-btn:hover {
+        background-color: #0460c2; /* Darker blue on hover */
+        transform: scale(1.05);
+    }
 </style>
 {% endblock %}

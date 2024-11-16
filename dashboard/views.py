@@ -1,21 +1,56 @@
 from pyexpat.errors import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
-from django.db.models.deletion import ProtectedError
+from django.db.models.deletion import ProtectedError, RestrictedError
 from dashboard.forms import EstablishmentForm, NormalUserForm
 from dashboard.models import Establishment, NormalUser, UserGroup
+from django.views.decorators.cache import never_cache
+
 
 @login_required
-
 def home(request):
-    context = {
-        'current_section': 'dashboard',
+    user_count = NormalUser.objects.count()
+    
+    # Fetch commands data and aggregate by date and status
+    commands_data = Command.objects.values('created_at', 'status') \
+        .annotate(count=Count('id')) \
+        .order_by('created_at')
+
+    # Prepare the data for the chart
+    dates = []
+    status_counts = {
+        'en cours': {},
+        'annulé': {},
+        'livré': {},
     }
+
+    for data in commands_data:
+        date_str = data['created_at'].strftime('%Y-%m-%d')  # Format the date as string
+        if date_str not in dates:
+            dates.append(date_str)
+
+        status_counts[data['status']][date_str] = data['count']
+
+    # Prepare the final lists for each status
+    en_cours = [status_counts['en cours'].get(date, 0) for date in dates]
+    annule = [status_counts['annulé'].get(date, 0) for date in dates]
+    livre = [status_counts['livré'].get(date, 0) for date in dates]
+
+    context = {
+        'dates': dates,
+        'en_cours': en_cours,
+        'annule': annule,
+        'livre': livre,
+        'current_section': 'dashboard',
+        'user_count': user_count,
+    }
+
+    
     return render(request, 'home.html', context)
 
 
 
-
+@login_required
 def utilisateur_view(request):
     users = NormalUser.objects.all()
     context = {
@@ -31,7 +66,7 @@ def utilisateur_view(request):
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import NormalUserForm, UserGroupForm  # Adjust this import according to your project structure
-
+@login_required
 def add_user(request):
     if request.method == 'POST':
         form = NormalUserForm(request.POST)
@@ -68,15 +103,16 @@ def delete_user(request, user_id):
     
     try:
         user.delete()
-        messages.success(request, 'User deleted successfully.')
-    except ProtectedError:
-        messages.error(request, 'Cannot delete this user because they are referenced by other records.')
-
-    return redirect('dashboard:user_list')
+    except RestrictedError as e:
+        # Affiche uniquement le message d'erreur spécifique
+        messages.error(request, "Impossible de supprimer l'utilisateur car il est associé à un ou plusieurs établissements.")
+    
+    return redirect('dashboard:utilisateur')
 
 
 
 # --- Établissement management views ---
+@login_required
 def etablissement_view(request):
     etablissements = Establishment.objects.all()
     context = {
@@ -85,6 +121,7 @@ def etablissement_view(request):
     }
     return render(request, 'etablissement.html', context)
 
+@login_required
 def add_etablissement(request):
     if request.method == 'POST':
         form = EstablishmentForm(request.POST, request.FILES)
@@ -119,12 +156,13 @@ def delete_etablissement(request, etablissement_id):
     return redirect('dashboard:etablissement')
 
 #####
-
+@login_required
 def groupes_view(request):
     usergroups = UserGroup.objects.all()
     return render(request, 'groupes.html', {'usergroups': usergroups, 'current_section': 'groupes',})
 
 # Add UserGroup
+@login_required
 def usergroup_add(request):
     if request.method == 'POST':
         form = UserGroupForm(request.POST)
@@ -139,6 +177,7 @@ def usergroup_add(request):
     return render(request, 'add_usergroup.html', {'form': form, 'current_section': 'usergroup'})
 
 # Edit UserGroup
+@login_required
 def usergroup_edit(request, pk):
     usergroup = get_object_or_404(UserGroup, pk=pk)
     if request.method == 'POST':
@@ -154,8 +193,17 @@ def usergroup_edit(request, pk):
     return render(request, 'edit_usergroup.html', {'form': form, 'usergroup': usergroup, 'current_section': 'usergroup'})
 
 # Delete UserGroup
+@login_required
 def usergroup_delete(request, pk):
     usergroup = get_object_or_404(UserGroup, pk=pk)
     usergroup.delete()
     messages.success(request, "User Group deleted successfully!")
     return redirect('dashboard:groupes')
+
+
+
+from django.shortcuts import render
+from django.db.models import Count
+from .models import Command
+
+

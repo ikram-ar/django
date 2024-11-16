@@ -24,8 +24,8 @@
             </div>
         {% endif %}
         </div>   
-        <button type="submit" class="btn btn-primary update-btn">Update User</button>
-        <a href="{% url 'dashboard:utilisateur' %}" class="btn btn-secondary cancel-btn">Cancel</a>
+        <button type="submit" class="btn btn-primary update-btn">Modifier</button>
+        <a href="{% url 'dashboard:utilisateur' %}" class="btn btn-secondary cancel-btn">Annuler</a>
 
     </form>
 </div>
@@ -74,10 +74,10 @@ h2.text-center {
 }
 
 .btn.update-btn {
-    background-color: #1e7e34; /* Green for update */
+    background-color: green; /* Green for update */
     color: #fff;
     border: none;
-    padding: 14px 20px;
+    padding: 10px 15px;
     font-size: 16px;
     border-radius: 5px;
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -87,22 +87,17 @@ h2.text-center {
 }
 
 .btn.update-btn:hover {
-    background-color: rgba(40, 167, 69, 0.5); /* Darker green on hover */
+    background-color: #1e7e34; /* Darker green on hover */
     transform: scale(1.05);
 }
 
-.btn.update-btn:focus, .btn.update-btn:active {
-    background-color: #1e7e34;
-    outline: none;
-    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
-}
 
 /* Style for the "Cancel" link */
 .btn.cancel-btn {
     background-color:#007bff; /* Red for cancel */
     color: #fff;
     border: none;
-    padding: 9.6px 20px;
+    padding: 7.4px 15px;
     font-size: 16px;
     border-radius: 5px;
     transition: background-color 0.3s ease, transform 0.3s ease;

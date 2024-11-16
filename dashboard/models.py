@@ -8,7 +8,7 @@ class NormalUser(models.Model):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
-    phone_number = models.CharField(verbose_name="Numéro de téléphone", max_length=20, default="1234567890")
+    phone_number = models.CharField(verbose_name="Numéro de téléphone", max_length=20, default="")
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
@@ -47,24 +47,22 @@ class UserGroup(models.Model):
     def __str__(self):
         return self.name
 
-# Modèle Revenue (si nécessaire)
-class Revenue(models.Model):
-    phone = models.CharField(max_length=20, verbose_name="Numéro de téléphone", blank=True, null=True)
-    
-    
-    def _str_(self):
-        return f"Revenue {self.id}"
 
-# Modèle Chart (si nécessaire)
-# class Chart(models.Model):
-    
-#     phone = models.CharField(max_length=20, verbose_name="Numéro de téléphone", blank=True, null=True)
-    
-    
-#     def _str_(self):
-#         return f"Chart {self.id}"
 
-# Autres modèles peuvent être ajoutés ici de manière similaire...
+class Command(models.Model):
+    STATUS_CHOICES = [
+        ('en cours', 'En Cours'),
+        ('annulé', 'Annulé'),
+        ('livré', 'Livré'),
+    ]
+
+    name = models.CharField(max_length=255)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    created_at = models.DateField()
+
+    def __str__(self):
+        return self.name
+
 
 
 
