@@ -39,7 +39,7 @@ class Establishment(models.Model):
     def _str_(self):
         return self.name
     
-# User Group Model
+# Modèle User Group 
 class UserGroup(models.Model):
     name = models.CharField(max_length=255, unique=True)
     users = models.ManyToManyField(NormalUser, related_name='groups')
@@ -48,7 +48,7 @@ class UserGroup(models.Model):
         return self.name
 
 
-
+# Modèle Command 
 class Command(models.Model):
     STATUS_CHOICES = [
         ('en cours', 'En Cours'),

@@ -1,16 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Utilisateurs{% endblock %}
+{% block title %}Groupes d'Utilisateurs{% endblock %}
 
 {% block content %}
 <div class="head-title">
     <div class="left">
-        <h1>Utilisateur</h1>
+        <h1>Groupes d'Utilisateurs</h1>
         <ul>
-            <!-- <li>
-                <a href="#">Utilisateur</a>
-            </li> -->
-            
             <li>
                 <i class='bx bx-chevron-right'></i>
                 <a class="active" href="{% url 'dashboard:home' %}">Accueil</a>
@@ -20,31 +16,33 @@
 </div>
 
 <div class="col-md-12">
-    <span><a href="{% url 'dashboard:add_user' %}" class="btn btn-custom-green">Ajouter un nouvel utilisateur</a></span>  
+    <span><a href="{% url 'dashboard:add_usergroup' %}" class="btn btn-custom-green">Ajouter un Groupe</a></span>  
     <div class="table-responsive">
-        <table id="users_table" class="table table-striped table-bordered" width="100%">
+        <table id="usergroups_table" class="table table-striped table-bordered" width="100%">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="checkall" /></th>
                     <th>ID</th>
-                    <th>Nom d'utilisateur</th>
-                    <th>Email</th>
-                    <th>Numéro de téléphone</th>
+                    <th>Nom du Groupe</th>
+                    <th>Utilisateurs</th>
                     <th>Modifier</th>
                     <th>Supprimer</th>
                 </tr>
             </thead>
             <tbody>
-                {% for user in users %}
+                {% for group in usergroups %}
                     <tr>
                         <td><input type="checkbox" class="checkthis" /></td>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.phone_number }}</td>
-                        <td><a href="{% url 'dashboard:edit_user' user.id %}" class="btn btn-primary pen-btn"><i class="fas fa-pen"></i></a></td>
+                        <td>{{ group.id }}</td>
+                        <td>{{ group.name }}</td>
                         <td>
-                            <button class="btn btn-danger delete-btn trash-btn" data-id="{{ user.id }}"><i class="fas fa-trash-alt"></i></button>
+                            {% for user in group.users.all %}
+                                <span>{{ user.username }}</span>{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td><a href="{% url 'dashboard:edit_usergroup' group.id %}" class="btn btn-primary pen-btn"><i class="fas fa-pen"></i></a></td>
+                        <td>
+                            <button class="btn btn-danger delete-btn trash-btn" data-id="{{ group.id }}"><i class="fas fa-trash-alt"></i></button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -53,17 +51,18 @@
     </div>
 </div>
 
+<!-- Modal de Confirmation de Suppression -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Confirmer la Suppression</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+                Êtes-vous sûr de vouloir supprimer ce groupe d'utilisateurs ?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
@@ -80,22 +79,22 @@
 
 <script>
     $(document).ready(function() {
-        $('#users_table').DataTable({
-            "dom": '<"top"f>rt<"bottom"p><"clear">',
-            "paging": false,
-            "info": false,
+        $('#usergroups_table').DataTable({
+            "dom": '<"top"f>rt<"bottom"p><"clear">', 
+            "paging": false, 
+            "info": false, 
             "lengthChange": false,
             language: {
-            search: "Chercher:",
-            "zeroRecords": "Aucun enregistrement correspondant trouvé"
-        }
+                search: "Chercher:",
+                zeroRecords: "Aucun enregistrement correspondant trouvé"
+            }
         }); 
         
         var deleteModal = $('#deleteModal');
         
         $('.delete-btn').on('click', function() {
-            var userId = $(this).data('id');
-            var url = "{% url 'dashboard:delete_user' 0 %}".slice(0, -2) + userId;
+            var groupId = $(this).data('id');
+            var url = "{% url 'dashboard:delete_usergroup' 0 %}".slice(0, -2) + groupId;
             $('#confirmDelete').attr('href', url);
             deleteModal.modal('show');
         });
@@ -133,7 +132,6 @@
     outline: none;
 }
 
-
 .table-responsive {
     margin-bottom: 20px;
 }
@@ -149,31 +147,25 @@
     background-color: #218838;
     color: white;
 }
-td{
-    text-align: center; /* Center horizontally */
-    vertical-align: middle; /* Center vertically */
+
+td, th {
+    text-align: center;
+    vertical-align: middle;
 }
-th{
-    text-align: center; /* Center horizontally */
-    vertical-align: middle; /* Center vertically */
-}
+
 .pen-btn i {
-    color: blue; /* Set the color of the pen icon */
+    color: blue;
 }
 
 .trash-btn i {
-    color: red; /* Set the color of the trash icon */
-}
-.pen-btn i:hover, .trash-btn i:hover{
-    color: white; /* Set the color of the pen icon */
+    color: red;
 }
 
-.pen-btn {
-    background-color: transparent;
-    border: none;
+.pen-btn i:hover, .trash-btn i:hover {
+    color: white;
 }
 
-.trash-btn {
+.pen-btn, .trash-btn {
     background-color: transparent;
     border: none;
 }
@@ -181,36 +173,27 @@ th{
 @media (max-width: 800px) {
     .dataTables_wrapper .dataTables_filter {
         float: left;
-        width: 100%; /* Ensure it takes the full width on smaller screens */
+        width: 100%;
         margin-top: 10px;
         padding-top: 15px;
     }
     
     .dataTables_filter input {
-        width: calc(100% - 16px); /* Adjust width to fit within parent padding */
-        margin: 0; /* Reset margin */
+        width: calc(100% - 16px);
+        margin: 0;
     }
+    
     .btn-custom-green {
-    font-size: small;
-    border: none;
-}
+        font-size: small;
+        border: none;
+    }
 }
 
-body.dark table {
+body.dark table, body.dark th, body.dark td {
     background-color: #0C0C1E;
     color: #fff;
 }
 
-body.dark th {
-    background-color: #0C0C1E;
-    color: #fff;
-}
-
-body.dark td {
-    background-color: #101022;
-    color: #fff;
-}
-/* Dark Mode Styles for DataTable */
 body.dark .dataTables_filter input {
     background-color: #151529;
     color: #fff;
@@ -225,7 +208,6 @@ body.dark .dataTables_filter input:focus {
 body.dark .dataTables_filter label {
     color: #fff;
 }
-
-
 </style>
+
 {% endblock %}

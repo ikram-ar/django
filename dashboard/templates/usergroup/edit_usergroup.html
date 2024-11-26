@@ -1,42 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-5">
     <div class="head-title">
         <div class="left">
-            <h1>Modifier utilisateur</h1>
+            <h1>Modifier le groupe d'utilisateurs</h1>
         </div>
     </div>
     <form method="POST">
         {% csrf_token %}
         <div class="table-data">
-        {{ form.as_p }}
-
-        {% if form.errors %}
-            <div class="alert alert-danger">
-                <ul>
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                </ul>
+            <div class="row">
+                {% for field in form %}
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-        {% endif %}
-        </div>   
-        <button type="submit" class="btn btn-primary update-btn">Modifier</button>
-        <a href="{% url 'dashboard:utilisateur' %}" class="btn btn-secondary cancel-btn">Annuler</a>
-
+        </div>
+        <button type="submit" class="btn btn-primary custom-btn">Mettre à jour le groupe</button>
+        <a href="{% url 'dashboard:groupes' %}" class="btn btn-secondary cancel-btn">Annuler</a>
     </form>
 </div>
 
-
 <style>
-    /* Custom CSS for form fields and button */
 .container {
     max-width: 600px;
     margin-left: 1%;
-    
 }
 
 h2.text-center {
@@ -73,28 +72,26 @@ h2.text-center {
     outline: none;
 }
 
-.btn.update-btn {
-    background-color: green; /* Green for update */
+.btn.custom-btn {
+    background-color: green;
     color: #fff;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 20px;
     font-size: 16px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    display: inline-block;
+    border-radius: 8px;
+    margin: auto;
     margin-top: 5%;
-    text-decoration: none;
+    
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.btn.update-btn:hover {
-    background-color: #1e7e34; /* Darker green on hover */
+.btn.custom-btn:hover {
+    background-color: rgb(1, 109, 1);
     transform: scale(1.05);
 }
 
-
-/* Style for the "Cancel" link */
 .btn.cancel-btn {
-    background-color:#007bff; /* Red for cancel */
+    background-color: #007bff; 
     color: #fff;
     border: none;
     padding: 7.4px 15px;
@@ -108,10 +105,8 @@ h2.text-center {
 }
 
 .btn.cancel-btn:hover {
-    background-color:#0460c2; /* Darker red on hover */
+    background-color: #0460c2; 
     transform: scale(1.05);
 }
-
-
 </style>
 {% endblock %}

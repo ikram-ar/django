@@ -58,7 +58,7 @@ def utilisateur_view(request):
         'users': users,  # Pass the actual 'users' queryset here
     }
     print(users)
-    return render(request, 'utilisateur.html', context)
+    return render(request, 'user/utilisateur.html', context)
 
 
 
@@ -80,7 +80,7 @@ def add_user(request):
     else:
         form = NormalUserForm()
     
-    return render(request, 'add_user.html', {'form': form, 'current_section': 'utilisateur'})
+    return render(request, 'user/add_user.html', {'form': form, 'current_section': 'utilisateur'})
 
 def edit_user(request, user_id):
     user = get_object_or_404(NormalUser, pk=user_id)
@@ -96,7 +96,7 @@ def edit_user(request, user_id):
     else:
         form = NormalUserForm(instance=user)
 
-    return render(request, 'edit_user.html', {'form': form, 'user': user, 'current_section': 'utilisateur'})
+    return render(request, 'user/edit_user.html', {'form': form, 'user': user, 'current_section': 'utilisateur'})
 
 def delete_user(request, user_id):
     user = get_object_or_404(NormalUser, id=user_id)
@@ -119,7 +119,7 @@ def etablissement_view(request):
         'current_section': 'etablissement',
         'etablissements': etablissements,
     }
-    return render(request, 'etablissement.html', context)
+    return render(request, 'etablissement/etablissement.html', context)
 
 @login_required
 def add_etablissement(request):
@@ -133,7 +133,7 @@ def add_etablissement(request):
             messages.error(request, "Error adding the établissement.")
     else:
         form = EstablishmentForm()
-    return render(request, 'add_etablissement.html', {'form': form, 'current_section': 'etablissement'})
+    return render(request, 'etablissement/add_etablissement.html', {'form': form, 'current_section': 'etablissement'})
 
 def edit_etablissement(request, etablissement_id):
     etablissement = get_object_or_404(Establishment, pk=etablissement_id)
@@ -147,7 +147,7 @@ def edit_etablissement(request, etablissement_id):
             messages.error(request, "Error updating the établissement.")
     else:
         form = EstablishmentForm(instance=etablissement)
-    return render(request, 'edit_etablissement.html', {'form': form, 'etablissement': etablissement ,'current_section': 'etablissement'})
+    return render(request, 'etablissement/edit_etablissement.html', {'form': form, 'etablissement': etablissement ,'current_section': 'etablissement'})
 
 def delete_etablissement(request, etablissement_id):
     etablissement = get_object_or_404(Establishment, pk=etablissement_id)
@@ -159,7 +159,7 @@ def delete_etablissement(request, etablissement_id):
 @login_required
 def groupes_view(request):
     usergroups = UserGroup.objects.all()
-    return render(request, 'groupes.html', {'usergroups': usergroups, 'current_section': 'groupes',})
+    return render(request, 'usergroup/groupes.html', {'usergroups': usergroups, 'current_section': 'groupes',})
 
 # Add UserGroup
 @login_required
@@ -174,7 +174,7 @@ def usergroup_add(request):
             messages.error(request, "Error adding the User Group.")
     else:
         form = UserGroupForm()
-    return render(request, 'add_usergroup.html', {'form': form, 'current_section': 'usergroup'})
+    return render(request, 'usergroup/add_usergroup.html', {'form': form, 'current_section': 'usergroup'})
 
 # Edit UserGroup
 @login_required
@@ -190,7 +190,7 @@ def usergroup_edit(request, pk):
             messages.error(request, "Error updating the User Group.")
     else:
         form = UserGroupForm(instance=usergroup)
-    return render(request, 'edit_usergroup.html', {'form': form, 'usergroup': usergroup, 'current_section': 'usergroup'})
+    return render(request, 'usergroup/edit_usergroup.html', {'form': form, 'usergroup': usergroup, 'current_section': 'usergroup'})
 
 # Delete UserGroup
 @login_required

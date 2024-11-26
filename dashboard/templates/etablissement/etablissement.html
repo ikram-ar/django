@@ -15,7 +15,6 @@
     </div>
 </div>
 
-<!-- Contenu spécifique pour la page Établissement -->
 <div class="col-md-12">
     <span><a href="{% url 'dashboard:add_etablissement' %}" class="btn btn-custom-green">Ajouter un nouvel établissement</a></span>
     <div class="table-responsive">
@@ -50,7 +49,6 @@
     </div>
 </div>
 
-<!-- Modal de confirmation de suppression -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -71,7 +69,6 @@
     </div>
 </div>
 
-<!-- Inclure Bootstrap CSS et JS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -80,19 +77,18 @@
 <script>
     $(document).ready(function() {
         $('#etablissement_table').DataTable({
-            "dom": '<"top"f>rt<"bottom"p><"clear">', // Mise en page personnalisée : f pour recherche, p pour pagination
-            "paging": false, // Activer la pagination
-            "info": false, // Désactiver le message "Affichage de X à Y sur Z entrées"
+            "dom": '<"top"f>rt<"bottom"p><"clear">',
+            "paging": false,
+            "info": false,
             "lengthChange": false, 
             language: {
-            search: "Chercher :",
-            "zeroRecords": "Aucun enregistrement correspondant trouvé"
-        }
+                search: "Chercher :",
+                "zeroRecords": "Aucun enregistrement correspondant trouvé"
+            }
         }); 
         
         var deleteModal = $('#deleteModal');
         
-        // Afficher le modal lorsqu'un bouton de suppression est cliqué
         $('.delete-btn').on('click', function() {
             var etablissementId = $(this).data('id');
             var url = "{% url 'dashboard:delete_etablissement' 0 %}".slice(0, -2) + etablissementId;
@@ -100,7 +96,6 @@
             deleteModal.modal('show');
         });
 
-        // Masquer le modal lorsque le bouton annuler ou fermer est cliqué
         deleteModal.find('.btn-secondary, .close').on('click', function() {
             deleteModal.modal('hide');
         });
@@ -134,7 +129,6 @@
     outline: none;
 }
 
-
 .table-responsive {
     margin-bottom: 20px;
 }
@@ -150,23 +144,22 @@
     background-color: #218838;
     color: white;
 }
-td{
-    text-align: center; /* Centrer horizontalement */
-    vertical-align: middle; /* Centrer verticalement */
+
+td, th {
+    text-align: center;
+    vertical-align: middle;
 }
-th{
-    text-align: center; /* Centrer horizontalement */
-    vertical-align: middle; /* Centrer verticalement */
-}
+
 .pen-btn i {
-    color: blue; /* Définir la couleur de l'icône de stylo */
+    color: blue;
 }
 
 .trash-btn i {
-    color: red; /* Définir la couleur de l'icône de corbeille */
+    color: red;
 }
-.pen-btn i:hover, .trash-btn i:hover{
-    color: white; /* Définir la couleur de l'icône de stylo */
+
+.pen-btn i:hover, .trash-btn i:hover {
+    color: white;
 }
 
 .pen-btn {
@@ -182,19 +175,20 @@ th{
 @media (max-width: 800px) {
     .dataTables_wrapper .dataTables_filter {
         float: left;
-        width: 100%; /* S'assurer qu'il prend toute la largeur sur les écrans plus petits */
+        width: 100%;
         margin-top: 10px;
         padding-top: 15px;
     }
     
     .dataTables_filter input {
-        width: calc(100% - 16px); /* Ajuster la largeur pour s'adapter au parent */
-        margin: 0; /* Réinitialiser la marge */
+        width: calc(100% - 16px);
+        margin: 0;
     }
+
     .btn-custom-green {
-    font-size: small;
-    border: none;
-}
+        font-size: small;
+        border: none;
+    }
 }
 
 body.dark table {
@@ -211,7 +205,7 @@ body.dark td {
     background-color: #101022;
     color: #fff;
 }
-/* Styles pour le mode sombre pour DataTable */
+
 body.dark .dataTables_filter input {
     background-color: #151529;
     color: #fff;
@@ -226,7 +220,5 @@ body.dark .dataTables_filter input:focus {
 body.dark .dataTables_filter label {
     color: #fff;
 }
-
 </style>
-
 {% endblock %}

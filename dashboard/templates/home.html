@@ -11,7 +11,7 @@
             </li>
             <li><i class='bx bx-chevron-right'></i></li>
             <li>
-                <a class="active" href="#">Home</a>
+                <a class="active" href="{% url 'dashboard:home' %}">Acceuil</a>
             </li>
         </ul>
     </div>
@@ -88,11 +88,23 @@
             box-shadow: 0 1px 3px rgba(0, 198, 255, 0.7);
         }
 
+        /* Dark mode */
+        body.dark .date-picker {
+            color: #fff; /* White text for readability */
+            border: 2px solid  #232342;; /* Darker border */
+            background-color:  #151529;; /* Darker background */
+            box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1); /* Lighter shadow */
+        }
+
+        body.dark .date-picker:focus {
+            border-color: #4e9af1; /* Lighter blue when focused in dark mode */
+            box-shadow: 0 1px 5px rgba(78, 154, 241, 0.3); /* Focus shadow with blue hue */
+        }
+
         /* Titre du graphique */
         .chart-title {
             text-align: center;
             font-size: 18px;
-            font-weight: bold;
             margin: 20px 0;
         }
 
@@ -109,6 +121,27 @@
             overflow-x: auto;
             padding-bottom: 1rem;
         }
+
+        @media (max-width: 768px) {
+        .chart-container {
+            padding: 0; /* Réduire les marges sur les petits écrans */
+        }
+
+        .date-picker-container {
+            text-align: center;
+            margin: 5px 0;
+        }
+
+        .date-picker {
+            width: 180px; /* Ajuster la largeur du sélecteur de date */
+            padding: 8px;
+            font-size: 12px; /* Réduire la taille de la police sur les petits écrans */
+        }
+
+        .chart-title {
+            font-size: 16px; /* Réduire la taille du titre sur les petits écrans */
+        }
+    }
     </style>
 </head>
 
@@ -143,7 +176,7 @@
             {
                 label: 'Annulé',
                 data: {{annule|safe}},
-                backgroundColor: '#FD7238',  // Changer la couleur du rouge en #FD7238
+                backgroundColor: '#FD7238',  
                 borderColor: 'rgba(253, 114, 56, 1)',
                 borderWidth: 1
             },
@@ -168,7 +201,7 @@
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'top'
+                    position: 'top',
                 },
                 tooltip: {
                     enabled: true
@@ -192,6 +225,14 @@
                     beginAtZero: true,
                     grid: {
                         display: false // Remove grid lines from the y-axis
+                    },
+                    ticks: {
+                        suggestedMin: 0, 
+                        suggestedMax: 10, 
+                        stepSize: 1,  // Adjust step size to make the axis values more granular
+                        font: {
+                            size: window.innerWidth < 768 ? 10 : 14  // Dynamically adjust Y-axis font size
+                        }
                     }
                 }
             }

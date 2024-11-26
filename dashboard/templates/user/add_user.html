@@ -4,34 +4,18 @@
 <div class="container mt-5">
     <div class="head-title">
         <div class="left">
-            <h1>Modifier le groupe d'utilisateurs</h1>
+            <h1>Ajouter un nouvel utilisateur</h1>
         </div>
     </div>
-    <form method="POST">
+    <form method="post">
         {% csrf_token %}
         <div class="table-data">
-            <div class="row">
-                {% for field in form %}
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {{ field.label_tag }}
-                            {{ field }}
-                            {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                            {% for error in field.errors %}
-                                <div class="invalid-feedback">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+            {{ form.as_p }}
         </div>
-        <button type="submit" class="btn btn-primary custom-btn">Mettre à jour le groupe</button>
-        <a href="{% url 'dashboard:groupes' %}" class="btn btn-secondary cancel-btn">Annuler</a>
+        <button type="submit" class="btn btn-primary custom-btn">Ajouter</button>
+        <a href="{% url 'dashboard:utilisateur' %}" class="btn btn-secondary cancel-btn">Annuler</a>
     </form>
 </div>
-
 <style>
 .container {
     max-width: 600px;
@@ -81,7 +65,6 @@ h2.text-center {
     border-radius: 8px;
     margin: auto;
     margin-top: 5%;
-    
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
@@ -91,7 +74,7 @@ h2.text-center {
 }
 
 .btn.cancel-btn {
-    background-color: #007bff; /* Blue for cancel */
+    background-color: #007bff;
     color: #fff;
     border: none;
     padding: 7.4px 15px;
@@ -105,7 +88,7 @@ h2.text-center {
 }
 
 .btn.cancel-btn:hover {
-    background-color: #0460c2; /* Darker blue on hover */
+    background-color: #0460c2;
     transform: scale(1.05);
 }
 </style>
