@@ -3,7 +3,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.db.models.deletion import ProtectedError, RestrictedError
 from dashboard.forms import EstablishmentForm, NormalUserForm
-from dashboard.models import Establishment, NormalUser, UserGroup
+from dashboard.models import Establishment, NormalUser
+from django.contrib.auth.models import Group
 from django.views.decorators.cache import never_cache
 
 
@@ -158,7 +159,7 @@ def delete_etablissement(request, etablissement_id):
 #####
 @login_required
 def groupes_view(request):
-    usergroups = UserGroup.objects.all()
+    usergroups = Group.objects.all()
     return render(request, 'usergroup/groupes.html', {'usergroups': usergroups, 'current_section': 'groupes',})
 
 # Add UserGroup
@@ -174,12 +175,12 @@ def usergroup_add(request):
             messages.error(request, "Error adding the User Group.")
     else:
         form = UserGroupForm()
-    return render(request, 'usergroup/add_usergroup.html', {'form': form, 'current_section': 'usergroup'})
+    return render(request, 'usergroup/add_usergroup.html', {'form': form, 'current_section': 'groupes'})
 
 # Edit UserGroup
 @login_required
 def usergroup_edit(request, pk):
-    usergroup = get_object_or_404(UserGroup, pk=pk)
+    usergroup = get_object_or_404(Group, pk=pk)
     if request.method == 'POST':
         form = UserGroupForm(request.POST, instance=usergroup)
         if form.is_valid():
@@ -190,12 +191,12 @@ def usergroup_edit(request, pk):
             messages.error(request, "Error updating the User Group.")
     else:
         form = UserGroupForm(instance=usergroup)
-    return render(request, 'usergroup/edit_usergroup.html', {'form': form, 'usergroup': usergroup, 'current_section': 'usergroup'})
+    return render(request, 'usergroup/edit_usergroup.html', {'form': form, 'usergroup': usergroup, 'current_section': 'groupes'})
 
 # Delete UserGroup
 @login_required
 def usergroup_delete(request, pk):
-    usergroup = get_object_or_404(UserGroup, pk=pk)
+    usergroup = get_object_or_404(Group, pk=pk)
     usergroup.delete()
     messages.success(request, "User Group deleted successfully!")
     return redirect('dashboard:groupes')
@@ -205,5 +206,3 @@ def usergroup_delete(request, pk):
 from django.shortcuts import render
 from django.db.models import Count
 from .models import Command
-
-

@@ -36,131 +36,245 @@
     </li>
 </ul>
 
-<div class="table-data">
-    <div class="order">
-        <table>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graphique à barres empilées avec sélecteur de plage de dates - Commande pour filtrer les dates sélectionnées</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script> <!-- Ajouter le fichier de locale française -->
     <style>
-        /* Centrer le graphique et les éléments de saisie */
-        .chart-container {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 1rem;
-            position: relative;
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch; 
+            gap: 2.5%;   
         }
 
-        /* Style pour le conteneur du sélecteur de date */
-        .date-picker-container {
-            text-align: center;
-            margin: 10px 0;
+        .content, .empty {
+            width: 50%;
+            /* padding: 20px; */
         }
-
-        /* Style pour l'entrée du sélecteur de date */
-        .date-picker {
-            width: 250px;
-            padding: 10px;
-            font-size: 16px;
-            color: black;
-            font-weight: 500;
-            border: 2px solid #E5E7EB;
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            background-color: #f9fafb;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        /* Effet au survol du sélecteur de date */
-        .date-picker:hover {
-            border-color: #0072ff;
-            cursor: pointer;
-        }
-
-        /* Effet de focus sur le sélecteur de date */
-        .date-picker:focus {
-            outline: none;
-            border-color: #00c6ff;
-            box-shadow: 0 1px 3px rgba(0, 198, 255, 0.7);
-        }
-
-        /* Dark mode */
-        body.dark .date-picker {
-            color: #fff; /* White text for readability */
-            border: 2px solid  #232342;; /* Darker border */
-            background-color:  #151529;; /* Darker background */
-            box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1); /* Lighter shadow */
-        }
-
-        body.dark .date-picker:focus {
-            border-color: #4e9af1; /* Lighter blue when focused in dark mode */
-            box-shadow: 0 1px 5px rgba(78, 154, 241, 0.3); /* Focus shadow with blue hue */
-        }
-
-        /* Titre du graphique */
-        .chart-title {
-            text-align: center;
-            font-size: 18px;
-            margin: 20px 0;
-        }
-
-        /* Style pour le canevas du graphique */
-        canvas {
-            width: 100% !important;
-            height: auto !important;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Ajouter un style pour le wrapper du canvas pour le rendre scrollable horizontalement sur les petits écrans */
-        .canvas-wrapper {
-            overflow-x: auto;
-            padding-bottom: 1rem;
-        }
-
-        @media (max-width: 768px) {
-        .chart-container {
-            padding: 0; /* Réduire les marges sur les petits écrans */
-        }
-
-        .date-picker-container {
-            text-align: center;
-            margin: 5px 0;
-        }
-
-        .date-picker {
-            width: 180px; /* Ajuster la largeur du sélecteur de date */
-            padding: 8px;
-            font-size: 12px; /* Réduire la taille de la police sur les petits écrans */
-        }
-
-        .chart-title {
-            font-size: 16px; /* Réduire la taille du titre sur les petits écrans */
-        }
+        .content{
+                height: 40%;
+            }
+        #map-container {
+        height: 320px; /* Adjust the height as needed */
     }
+        
+        
+        @media (max-width: 800px) {
+            .container {
+                flex-direction: column;
+            }
+            .content, .empty {
+                width: 100%;
+            }
+            
+        }
     </style>
 </head>
-
-<div class="date-picker-container">
-    <input type="text" id="dateRangePicker" class="date-picker" placeholder="Sélectionnez la plage de dates" />
-</div>
-
-<div class="chart-container">
-    <div class="canvas-wrapper">
-        <canvas id="myChart"></canvas>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="table-data">
+                <div class="order">
+                    <div class="chart-title">
+                        Etat de commandes
+                    </div>
+                    <div class="date-picker-container">
+                        <input type="text" id="dateRangePicker" class="date-picker" placeholder="Sélectionnez la plage de dates" />
+                    </div>
+                    <div class="chart-container">
+                        <div class="canvas-wrapper">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="empty">
+                <div class="table-data">
+                    <div class="order">
+                            
+                                <div id="map-container">
+                                    <!-- Map will be embedded here -->
+                                    <div id="map" style="height: 100%; width: 100%;"></div>
+                                </div>
+                                <div class="chart-title">
+                                    Géolocalisation des livreurs
+                                </div>    
+                        
+                        
+                    </div>
+                </div>
+        </div>
     </div>
-</div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("#dateRangePicker", {
+            mode: "range",
+            locale: "fr"
+        });
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    </script>
 
-<div class="chart-title">
-    Graphique à barres empilées - Livraisons, Annulations, En cours
-</div>
+<head>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+    <script>
+        // Initialize Firebase
+        var firebaseConfig = {
+
+apiKey: "AIzaSyC0kUCS453P6s4rFYZnlzXI-WDS7e7HjSQ",
+
+authDomain: "projet-f4cf9.firebaseapp.com",
+
+databaseURL: "https://projet-f4cf9-default-rtdb.europe-west1.firebasedatabase.app",
+
+projectId: "projet-f4cf9",
+
+storageBucket: "projet-f4cf9.firebasestorage.app",
+
+messagingSenderId: "524627403056",
+
+appId: "1:524627403056:web:1de0128a490e7d63ff68f5",
+
+measurementId: "G-JNXWLV43ZR"
+
+};
+
+        firebase.initializeApp(firebaseConfig);
+
+        var db = firebase.firestore();
+
+        // Initialize the map
+        var map = L.map('map').setView([0, 0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Fetch locations from Firebase and add them to the map
+        db.collection("locations").onSnapshot((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                var location = doc.data();
+                L.marker([location.latitude, location.longitude])
+                    .addTo(map)
+                    .bindPopup(location.name);
+            });
+        });
+    </script>
+
+
+    
+    
+</body>
+<style>
+    /* Centrer le graphique et les éléments de saisie */
+    .chart-container {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 1rem;
+        position: relative;
+    }
+
+    /* Style pour le conteneur du sélecteur de date */
+    .date-picker-container {
+        text-align: center;
+        margin: 10px 0;
+    }
+
+    /* Style pour l'entrée du sélecteur de date */
+    .date-picker {
+        width: 250px;
+        padding: 10px;
+        font-size: 16px;
+        color: black;
+        font-weight: 500;
+        border: 2px solid #E5E7EB;
+        border-radius: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        background-color: #f9fafb;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Effet au survol du sélecteur de date */
+    .date-picker:hover {
+        border-color: #0072ff;
+        cursor: pointer;
+    }
+
+    /* Effet de focus sur le sélecteur de date */
+    .date-picker:focus {
+        outline: none;
+        border-color: #00c6ff;
+        box-shadow: 0 1px 3px rgba(0, 198, 255, 0.7);
+    }
+
+    /* Dark mode */
+    body.dark .date-picker {
+        color: #fff; /* White text for readability */
+        border: 2px solid  #232342;; /* Darker border */
+        background-color:  #151529;; /* Darker background */
+        box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1); /* Lighter shadow */
+    }
+
+    body.dark .date-picker:focus {
+        border-color: #4e9af1; /* Lighter blue when focused in dark mode */
+        box-shadow: 0 1px 5px rgba(78, 154, 241, 0.3); /* Focus shadow with blue hue */
+    }
+
+    /* Titre du graphique */
+    .chart-title {
+        text-align: center;
+        font-size: 18px;
+        margin: 7px 0;
+    }
+
+    /* Style pour le canevas du graphique */
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Ajouter un style pour le wrapper du canvas pour le rendre scrollable horizontalement sur les petits écrans */
+    .canvas-wrapper {
+        overflow-x: auto;
+        padding-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+    .chart-container {
+        padding: 0; /* Réduire les marges sur les petits écrans */
+    }
+
+    .date-picker-container {
+        text-align: center;
+        margin: 5px 0;
+    }
+
+    .date-picker {
+        width: 180px; /* Ajuster la largeur du sélecteur de date */
+        padding: 8px;
+        font-size: 12px; /* Réduire la taille de la police sur les petits écrans */
+    }
+
+    .chart-title {
+        font-size: 16px; /* Réduire la taille du titre sur les petits écrans */
+    }
+}
+</style>
+
 <script>
     // Données exemple pour le graphique
     const allData = {
@@ -171,21 +285,24 @@
                 data: {{livre|safe}},
                 backgroundColor: '#28a745',  // Changer la couleur du vert en #28a745
                 borderColor: 'rgba(40, 167, 69, 1)',
-                borderWidth: 1
+                borderWidth: 1,
+                barThickness: 17 // Make the bars thin
             },
             {
                 label: 'Annulé',
                 data: {{annule|safe}},
                 backgroundColor: '#FD7238',  
                 borderColor: 'rgba(253, 114, 56, 1)',
-                borderWidth: 1
+                borderWidth: 1,
+                barThickness: 17 // Make the bars thin
             },
             {
                 label: 'En cours',
                 data: {{en_cours|safe}},
                 backgroundColor: '#007bff',  // Changer la couleur jaune en #007bff
                 borderColor: 'rgba(0, 123, 255, 1)',
-                borderWidth: 1
+                borderWidth: 1,
+                barThickness: 17 // Make the bars thin
             }
         ]
     };

@@ -136,3 +136,6 @@ LANGUAGE_CODE = 'fr'
 LANGUAGES = (
     ('fr', gettext('French')),
 )
+
+
+

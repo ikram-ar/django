@@ -12,7 +12,7 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('index')  
+            return redirect('dashboard:home')  
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})

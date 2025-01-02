@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import Group
 
 # Modèle User
 class NormalUser(models.Model):
@@ -11,6 +12,7 @@ class NormalUser(models.Model):
     phone_number = models.CharField(verbose_name="Numéro de téléphone", max_length=20, default="")
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, related_name="users")
 
     def __str__(self):
         return self.username
@@ -39,13 +41,7 @@ class Establishment(models.Model):
     def _str_(self):
         return self.name
     
-# Modèle User Group 
-class UserGroup(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    users = models.ManyToManyField(NormalUser, related_name='groups')
 
-    def __str__(self):
-        return self.name
 
 
 # Modèle Command 
@@ -62,8 +58,3 @@ class Command(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
-
-
