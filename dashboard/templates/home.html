@@ -52,13 +52,15 @@
 
         .content, .empty {
             width: 50%;
-            /* padding: 20px; */
+            
         }
-        .content{
-                height: 40%;
-            }
+
+        
+        
         #map-container {
-        height: 320px; /* Adjust the height as needed */
+    height: 305px; /* Adjust the height as needed */
+    border-radius: 15px; /* Add rounded corners */
+    overflow: hidden; /* Ensure the map content doesn't overflow the border radius */
     }
         
         
@@ -85,9 +87,9 @@
                         <input type="text" id="dateRangePicker" class="date-picker" placeholder="Sélectionnez la plage de dates" />
                     </div>
                     <div class="chart-container">
-                        <div class="canvas-wrapper">
-                            <canvas id="myChart"></canvas>
-                        </div>
+                        
+                        <canvas id="myChart"></canvas>
+                        
                     </div>
                     
                 </div>
@@ -96,16 +98,13 @@
         <div class="empty">
                 <div class="table-data">
                     <div class="order">
-                            
-                                <div id="map-container">
-                                    <!-- Map will be embedded here -->
-                                    <div id="map" style="height: 100%; width: 100%;"></div>
-                                </div>
-                                <div class="chart-title">
-                                    Géolocalisation des livreurs
-                                </div>    
+                        <div class="chart-title">
+                            Géolocalisation des livreurs
+                        </div> 
                         
-                        
+                        <div id="map-container">
+                            <div id="map" style="height: 100%; width: 100%;"></div>
+                        </div>    
                     </div>
                 </div>
         </div>
@@ -130,25 +129,25 @@
 </head>
     <script>
         // Initialize Firebase
-        var firebaseConfig = {
+        
+        const firebaseConfig = {
 
-apiKey: "AIzaSyC0kUCS453P6s4rFYZnlzXI-WDS7e7HjSQ",
+apiKey: "AIzaSyCmHYYq7MnSqPYmKCKcBT1AdX5-QH4RF6s",
 
-authDomain: "projet-f4cf9.firebaseapp.com",
+authDomain: "dash-9656d.firebaseapp.com",
 
-databaseURL: "https://projet-f4cf9-default-rtdb.europe-west1.firebasedatabase.app",
+projectId: "dash-9656d",
 
-projectId: "projet-f4cf9",
+storageBucket: "dash-9656d.firebasestorage.app",
 
-storageBucket: "projet-f4cf9.firebasestorage.app",
+messagingSenderId: "1077992632904",
 
-messagingSenderId: "524627403056",
+appId: "1:1077992632904:web:992bb83a7c523c193f9e7d",
 
-appId: "1:524627403056:web:1de0128a490e7d63ff68f5",
-
-measurementId: "G-JNXWLV43ZR"
+measurementId: "G-MDBQJENVJF"
 
 };
+
 
         firebase.initializeApp(firebaseConfig);
 
@@ -184,7 +183,10 @@ measurementId: "G-JNXWLV43ZR"
         margin: 0 auto;
         padding: 1rem;
         position: relative;
+        height: 250px !important; /* Or any fixed height */
+        overflow: hidden; 
     }
+   
 
     /* Style pour le conteneur du sélecteur de date */
     .date-picker-container {
@@ -236,15 +238,15 @@ measurementId: "G-JNXWLV43ZR"
     .chart-title {
         text-align: center;
         font-size: 18px;
-        margin: 7px 0;
+        margin-bottom: 10px;
+        
     }
 
     /* Style pour le canevas du graphique */
     canvas {
         width: 100% !important;
         height: auto !important;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        
     }
 
     /* Ajouter un style pour le wrapper du canvas pour le rendre scrollable horizontalement sur les petits écrans */
@@ -252,6 +254,10 @@ measurementId: "G-JNXWLV43ZR"
         overflow-x: auto;
         padding-bottom: 1rem;
     }
+
+  
+    
+    
 
     @media (max-width: 768px) {
     .chart-container {
@@ -314,7 +320,7 @@ measurementId: "G-JNXWLV43ZR"
         type: 'bar',
         data: chartData,
         options: {
-            responsive: true,
+            
             maintainAspectRatio: false,
             plugins: {
                 legend: {
@@ -347,9 +353,7 @@ measurementId: "G-JNXWLV43ZR"
                         suggestedMin: 0, 
                         suggestedMax: 10, 
                         stepSize: 1,  // Adjust step size to make the axis values more granular
-                        font: {
-                            size: window.innerWidth < 768 ? 10 : 14  // Dynamically adjust Y-axis font size
-                        }
+                       
                     }
                 }
             }
@@ -392,11 +396,8 @@ measurementId: "G-JNXWLV43ZR"
     });
 
     // Fonction pour redimensionner le graphique
-    function resizeChart() {
-        myChart.resize();
-    }
+    
 
-    // Redimensionner le graphique lors du redimensionnement de la fenêtre
-    window.addEventListener('resize', resizeChart);
+    
 </script>
 {% endblock %}

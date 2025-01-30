@@ -87,113 +87,20 @@
 <script src="{% static 'js/script.js' %}"></script>
 
 <!-- Inline JavaScript for Interactive Search Filtering with Bold Matching Text -->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const items = [
-            { name: "Dashboard", url: "{% url 'dashboard:home' %}" },
-            { name: "Etablissement", url: "{% url 'dashboard:etablissement' %}" },
-            { name: "Utilisateur", url: "{% url 'dashboard:utilisateur' %}" },
-            { name: "Groupes d'Utilisateurs", url: "{% url 'dashboard:groupes' %}" },
-            { name: "Paramètres", url: "#" },
-            { name: "Déconnexion", url: "#" }
-        ];
 
-        const searchInput = document.getElementById("search-input");
-        const resultsContainer = document.getElementById("search-results");
-
-        function boldText(text, query) {
-            const regex = new RegExp((${query}), "gi");
-    return text.replace(regex, "<span class='bold'>$1</span>");
-    }
-
-    function filterItems(query) {
-    resultsContainer.innerHTML = "";
-
-    if (query.trim() === "") {
-    resultsContainer.style.display = "none";
-    return;
-    }
-
-    const filteredItems = items.filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
-
-    if (filteredItems.length > 0) {
-    resultsContainer.style.display = "block";
-    filteredItems.forEach(item => {
-    const resultItem = document.createElement("div");
-    resultItem.classList.add("result-item");
-    resultItem.innerHTML = boldText(item.name, query);
-    resultItem.onclick = () => {
-    window.location.href = item.url;
-    };
-    resultsContainer.appendChild(resultItem);
-    });
-    } else {
-    resultsContainer.style.display = "none";
-    }
-    }
-
-    searchInput.addEventListener("input", () => {
-    const query = searchInput.value;
-    filterItems(query);
-    });
-
-    document.addEventListener("click", (event) => {
-    if (!event.target.closest(".form-input")) {
-    resultsContainer.style.display = "none";
-    }
-    });
-    });
-</script>
 
 <style>
     /* CSS for Enhanced Search Results Display with Bold Matching Text */
-    .form-input {
-        position: relative;
-        width: 300px;
-    }
-
-    #search-results {
-        margin-top: 5px;
-        background-color: #f9f9f9;
-        border: 1px solid #ccc;
-        max-height: 150px;
-        overflow-y: auto;
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        z-index: 10;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
-    }
-
-    .result-item {
-        padding: 10px;
-        cursor: pointer;
-    }
-
-    .result-item:hover {
-        background-color: #eaeaea;
-    }
+    
     a:hover {
         text-decoration: none;
     }
     .no-underline:hover {
         text-decoration: none;
     }
+    
 
-
-
-    .bold {
-        font-weight: bold;
-    }
-
-    @media (max-width: 600px) {
-        .switch-mode {
-            right: 40px;
-        }
-    }
+    
 </style>
 
 </body>
