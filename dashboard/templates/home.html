@@ -324,7 +324,13 @@ measurementId: "G-MDBQJENVJF"
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'top',
+                position: 'top',
+                labels: {
+                    boxWidth: 10, // Size of the square
+                    boxHeight: 10, // Ensure it remains a square
+                    usePointStyle: true, // Use custom styles for the legend
+                    pointStyle: 'rect' // Ensure the legend icons are squares
+                }
                 },
                 tooltip: {
                     enabled: true

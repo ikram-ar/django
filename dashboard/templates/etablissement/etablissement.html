@@ -15,12 +15,13 @@
     .dataTables_wrapper .dataTables_paginate {
         float: right;
         margin-top: 3%;
+        color: #61686e;
     }
     
     .dataTables_filter input {
         width: 250px;
         padding: 8px;
-        font-size: 10px;
+        font-size: 12px;
         border: 1px solid #ccc;
         border-radius: 8px;
         margin-bottom: 10px;
@@ -50,6 +51,7 @@
     td, th {
         text-align: center;
         vertical-align: middle;
+        color: #61686e;
     }
     
     .pen-btn i {
@@ -93,35 +95,7 @@
         }
     }
     
-    body.dark table {
-        background-color: #0C0C1E;
-        color: #fff;
-    }
     
-    body.dark th {
-        background-color: #0C0C1E;
-        color: #fff;
-    }
-    
-    body.dark td {
-        background-color: #101022;
-        color: #fff;
-    }
-    
-    body.dark .dataTables_filter input {
-        background-color: #151529;
-        color: #fff;
-        border: 1px solid #666;
-    }
-    
-    body.dark .dataTables_filter input:focus {
-        border-color: #007bff;
-        outline: none;
-    }
-    
-    body.dark .dataTables_filter label {
-        color: #fff;
-    }
     </style>
 
 <div class="head-title">
@@ -142,7 +116,7 @@
         <table id="etablissement_table" class="table table-striped table-bordered" width="100%">
             <thead>
             <tr>
-                <th><input type="checkbox" id="checkall" /></th>
+                
                 <th>ID</th>
                 <th>Nom</th>
                 <th>Adresse</th>
@@ -154,7 +128,7 @@
             <tbody>
             {% for etablissement in etablissements %}
             <tr>
-                <td><input type="checkbox" class="checkthis" /></td>
+                
                 <td>{{ etablissement.id }}</td>
                 <td>{{ etablissement.name }}</td>
                 <td>{{ etablissement.address }}</td>

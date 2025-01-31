@@ -11,10 +11,21 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>{% block title %}Logo{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
-      
+
+    <!-- Inline JavaScript to Apply Dark Mode Before Page Renders -->
+    <script>
+        // Check localStorage for dark mode preference
+        const savedMode = localStorage.getItem('darkMode');
+        if (savedMode === 'enabled') {
+            // Apply dark mode by setting CSS variables directly
+            document.documentElement.style.setProperty('--light', '#0C0C1E');
+            document.documentElement.style.setProperty('--grey', '#060714');
+            document.documentElement.style.setProperty('--dark', '#FBFBFB');
+        }
+    </script>
 </head>
 <body>
+
 
 <!-- SIDEBAR -->
 <section id="sidebar">
@@ -99,7 +110,6 @@
         text-decoration: none;
     }
     
-
     
 </style>
 
