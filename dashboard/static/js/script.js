@@ -15,8 +15,28 @@ allSideMenu.forEach(item => {
 const menuBar = document.querySelector('#content nav .bx.bx-menu');
 const sidebar = document.getElementById('sidebar');
 
-menuBar.addEventListener('click', function () {
+// Function to toggle the sidebar and save its state
+function toggleSidebar() {
     sidebar.classList.toggle('hide');
+    // Save the sidebar state in localStorage
+    if (sidebar.classList.contains('hide')) {
+        localStorage.setItem('sidebarState', 'hidden');
+    } else {
+        localStorage.setItem('sidebarState', 'visible');
+    }
+}
+
+// Add event listener to the menu bar
+menuBar.addEventListener('click', toggleSidebar);
+
+// Restore the sidebar state on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebarState = localStorage.getItem('sidebarState');
+    if (sidebarState === 'hidden') {
+        sidebar.classList.add('hide'); // Hide the sidebar if it was hidden
+    } else {
+        sidebar.classList.remove('hide'); // Show the sidebar if it was visible
+    }
 });
 
 

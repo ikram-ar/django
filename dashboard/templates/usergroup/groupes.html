@@ -15,6 +15,7 @@
     .dataTables_wrapper .dataTables_paginate {
         float: right;
         margin-top: 3%;
+        color: #53595e;
     }
     
     .dataTables_filter input {
@@ -24,6 +25,7 @@
         border: 1px solid #ccc;
         border-radius: 8px;
         margin-bottom: 10px;
+        
     }
     
     .dataTables_filter input:focus {
@@ -50,6 +52,7 @@
     td, th {
         text-align: center;
         vertical-align: middle;
+        color: #53595e;
     }
     
     .pen-btn i {
@@ -75,37 +78,92 @@
             width: 100%;
             margin-top: 10px;
             padding-top: 15px;
+            
         }
-        
+    
         .dataTables_filter input {
             width: calc(100% - 16px);
-            margin: 0;
+            margin-bottom: 10px;
+            height: 19px;
+            margin-top: 25px;
+            width: 120px;
+            left: 0 !important;
+            margin-left: 10px;
         }
-        
+
+        body.dark .dataTables_filter input {
+        background-color: #151529 !important;
+        color: #fff;
+    }
+    
         .btn-custom-green {
             font-size: small;
             border: none;
         }
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_paginate {
+            float: right;
+            margin-top: 3%;
+            color: #53595e;
+            font-size: 14px;
+        }
+        td, th {
+        text-align: center;
+        vertical-align: middle;
+        color: #53595e;
+        font-size: 15px;
+        
+        padding: 6px !important; /* Reduce padding */
+        
+        }
+        /* Reduce button size */
+        .pen-btn, .trash-btn {
+            padding: 4px 8px; /* Reduce padding */
+            font-size: 1px; /* Reduce font size */
+        }
+
+        /* Reduce icon size inside buttons */
+        .pen-btn i, .trash-btn i {
+            font-size: 12px; /* Reduce icon size */
+        }
+
+        tr {
+            height: 30px; /* Fixed row height */
+            font-size: 20px !important;
+        }
+
+        .modal-dialog {
+        max-width: 60%; /* Full width on mobile */
+        margin: 10px auto; /* Reduce margin */
+    }
+
+    .modal-content {
+        border-radius: 5px; /* Smaller rounded corners */
+    }
+
+    .modal-header {
+        padding: 10px; /* Reduce padding */
+    }
+
+    .modal-title {
+        font-size: 16px; /* Smaller title size */
+    }
+
+    .modal-body {
+        padding: 10px; /* Reduce padding */
+        font-size: 14px; /* Smaller body text size */
+    }
+
+    .modal-footer {
+        padding: 10px; /* Reduce padding */
+    }
+
+    .modal-footer .btn {
+        padding: 6px 12px; /* Smaller button padding */
+        font-size: 12px; /* Smaller button font size */
     }
     
-    body.dark table, body.dark th, body.dark td {
-        background-color: #0C0C1E;
-        color: #fff;
-    }
-    
-    body.dark .dataTables_filter input {
-        background-color: #151529;
-        color: #fff;
-        border: 1px solid #666;
-    }
-    
-    body.dark .dataTables_filter input:focus {
-        border-color: #007bff;
-        outline: none;
-    }
-    
-    body.dark .dataTables_filter label {
-        color: #fff;
+   
     }
     </style>
 
@@ -129,7 +187,7 @@
                 <tr>
                     
                     <th>ID</th>
-                    <th>Nom du Groupe</th>
+                    <th>Nom</th>
                     <th>Utilisateurs</th>
                     <th>Modifier</th>
                     <th>Supprimer</th>

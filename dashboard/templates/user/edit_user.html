@@ -82,7 +82,7 @@ h2.text-center {
 }
 
 .btn.update-btn:hover {
-    background-color: #1e7e34;
+    background-color: #0eb134;
     transform: scale(1.05);
 }
 
@@ -103,6 +103,25 @@ h2.text-center {
 .btn.cancel-btn:hover {
     background-color: #0460c2;
     transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    
+    .table-data input[type="text"],
+    .table-data input[type="email"],
+    .table-data input[type="password"],
+    .table-data textarea,
+    .table-data select {
+        padding: 6px; /* Reduce padding for inputs */
+        font-size: 14px !important; /* Smaller font size for inputs */
+    }
+
+    .btn.update-btn,
+    .btn.cancel-btn {
+        font-size: 14px; /* Smaller font size for buttons */
+       
+    }
+
 }
 </style>
 {% endblock %}
