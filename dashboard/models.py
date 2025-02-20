@@ -41,9 +41,6 @@ class Establishment(models.Model):
     def _str_(self):
         return self.name
     
-
-
-
 # Modèle Command 
 class Command(models.Model):
     STATUS_CHOICES = [

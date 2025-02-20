@@ -14,7 +14,7 @@ urlpatterns = [
     path('edit_user/<int:user_id>/', views.edit_user, name='edit_user'),
     path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),
 
-    # URL patterns for Établissement (Establishment)
+    # URL patterns for Établissement 
     path('add_etablissement/', views.add_etablissement, name='add_etablissement'),
     path('edit_etablissement/<int:etablissement_id>/', views.edit_etablissement, name='edit_etablissement'),
     path('delete_etablissement/<int:etablissement_id>/', views.delete_etablissement, name='delete_etablissement'),

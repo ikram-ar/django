@@ -1,72 +1,8 @@
 from django import forms
-from .models import NormalUser
-from .models import Establishment
-from django.contrib.auth.models import Group
-
-class NormalUserForm(forms.ModelForm):
-    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-control'}))
-
-    class Meta:
-        model = NormalUser
-        fields = ['username', 'email', 'first_name', 'last_name', 'phone_number', 'group']
-        widgets = {
-            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'group': forms.Select(attrs={'class': 'form-control'}),
-        }
-        labels = {
-            'username': 'Nom d\'utilisateur',
-            'email': 'Adresse email',
-            'first_name': 'Prénom',
-            'last_name': 'Nom',
-            'group': 'Groupe',
-        }
-
-from django import forms
-from .models import Establishment
-
-class EstablishmentForm(forms.ModelForm):
-    class Meta:
-        model = Establishment
-        fields = [
-            'owner', 'name', 'manager_name', 'foundation_date', 'address', 
-            'nif_cin', 'rc_license', 'phone_number', 'email', 'description', 
-            'image', 'establishment_type', 'latitude', 'longitude', 'is_verified', 
-            'is_available', 'is_open', 'is_managed'
-        ]
-        widgets = {
-            'owner': forms.Select(attrs={'class': 'form-control'}),
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'manager_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'foundation_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'address': forms.TextInput(attrs={'class': 'form-control'}),
-            'nif_cin': forms.TextInput(attrs={'class': 'form-control'}),
-            'rc_license': forms.TextInput(attrs={'class': 'form-control'}),
-            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'establishment_type': forms.Select(attrs={'class': 'form-control'}),
-            'latitude': forms.NumberInput(attrs={'class': 'form-control'}),
-            'longitude': forms.NumberInput(attrs={'class': 'form-control'}),
-            'is_verified': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'is_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'is_open': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'is_managed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-        }
-
-from django import forms
-from django.contrib.auth.models import Group
-
-from django import forms
 from django.contrib.auth.models import Group, Permission
+from .models import NormalUser, Establishment
 
-from django import forms
-from django.contrib.auth.models import Group, Permission
-
+# Constants for permission translations
 PERMISSION_TRANSLATIONS = {
     'admin | logentry | Can add log entry': 'Peut ajouter une entrée de journal',
     'admin | logentry | Can change log entry': 'Peut modifier une entrée de journal',
@@ -114,12 +50,66 @@ PERMISSION_TRANSLATIONS = {
     'sessions | session | Can view session': 'Peut voir une session'
 }
 
+class NormalUserForm(forms.ModelForm):
+    """Formulaire pour la gestion des utilisateurs normaux"""
+    group = forms.ModelChoiceField(
+        queryset=Group.objects.all(),
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
+    class Meta:
+        model = NormalUser
+        fields = ['username', 'email', 'first_name', 'last_name', 'phone_number', 'group']
+        widgets = {
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'group': forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'username': 'Nom d\'utilisateur',
+            'email': 'Adresse email',
+            'first_name': 'Prénom',
+            'last_name': 'Nom',
+            'group': 'Groupe',
+        }
 
-from django import forms
-from django.contrib.auth.models import Group, Permission
+class EstablishmentForm(forms.ModelForm):
+    """Formulaire pour la gestion des établissements"""
+    class Meta:
+        model = Establishment
+        fields = [
+            'owner', 'name', 'manager_name', 'foundation_date', 'address',
+            'nif_cin', 'rc_license', 'phone_number', 'email', 'description',
+            'image', 'establishment_type', 'latitude', 'longitude', 'is_verified',
+            'is_available', 'is_open', 'is_managed'
+        ]
+        widgets = {
+            'owner': forms.Select(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'manager_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'foundation_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'nif_cin': forms.TextInput(attrs={'class': 'form-control'}),
+            'rc_license': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'establishment_type': forms.Select(attrs={'class': 'form-control'}),
+            'latitude': forms.NumberInput(attrs={'class': 'form-control'}),
+            'longitude': forms.NumberInput(attrs={'class': 'form-control'}),
+            'is_verified': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_open': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_managed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
 
 class UserGroupForm(forms.ModelForm):
+    """Formulaire pour la gestion des groupes d'utilisateurs"""
     permissions = forms.ModelMultipleChoiceField(
         queryset=Permission.objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -138,15 +128,13 @@ class UserGroupForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        """Initialisation avec traduction des permissions"""
         super().__init__(*args, **kwargs)
         permissions_field = self.fields['permissions']
         translated_choices = [
             (perm.id, PERMISSION_TRANSLATIONS.get(
                 f"{perm.content_type.app_label} | {perm.content_type.model} | {perm.name}",
-                f"{perm.content_type.app_label} | {perm.content_type.model} | {perm.name}"))
-            for perm in permissions_field.queryset
+                f"{perm.content_type.app_label} | {perm.content_type.model} | {perm.name}")
+            ) for perm in permissions_field.queryset
         ]
         permissions_field.choices = translated_choices
-
-
-

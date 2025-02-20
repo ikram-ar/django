@@ -3,407 +3,199 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<!-- En-tête avec fil d'Ariane (breadcrumbs) -->
 <div class="head-title">
     <div class="left">
         <ul class="breadcrumb">
-            <li>
-                <a href="#">Dashboard</a>
-            </li>
+            <li><a href="#">Dashboard</a></li>
             <li><i class='bx bx-chevron-right'></i></li>
-            <li>
-                <a class="active" href="{% url 'dashboard:home' %}">Acceuil</a>
-            </li>
+            <li><a class="active" href="{% url 'dashboard:home' %}">Acceuil</a></li>
         </ul>
     </div>
 </div>
 
+<!-- Affichage des informations principales -->
 <ul class="box-info">
-    <!-- Utilisateur Box -->
     <li>
         <span class="icon"><i class='lni lni-user'></i></span>
         <span class="text">
-            <h3>{{ user_count }}</h3>  <!-- Use the dynamic user count here -->
+            <h3>{{ user_count }}</h3>
             <p>Utilisateurs</p>
         </span>
     </li>
-    <!-- Chiffre d'affaire Box -->
     <li>
         <span class="icon"><i class='lni lni-money-location'></i></span>
         <span class="text">
             <h3>2834</h3>
             <p>Chiffre d'affaire</p>
         </span>
-    </li>
+    </li>
 </ul>
 
+<!-- Inclusion des liens et scripts nécessaires -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Styles externes -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script> <!-- Ajouter le fichier de locale française -->
+    <!-- Script pour la localisation du date picker -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
     <style>
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: stretch; 
-            gap: 2.5%;   
+        /* Styles pour la mise en page des éléments */
+        .container { display: flex; justify-content: space-between; align-items: stretch; gap: 2.5%; }
+        .content, .empty { width: 50%; }
+        #map-container { height: 305px; border-radius: 15px; overflow: hidden; }
+        @media (max-width: 800px) { 
+            .container { flex-direction: column; }
+            .content, .empty { width: 100%; }
         }
-
-        .content, .empty {
-            width: 50%;
-            
-        }
-
-        
-        
-        #map-container {
-    height: 305px; /* Adjust the height as needed */
-    border-radius: 15px; /* Add rounded corners */
-    overflow: hidden; /* Ensure the map content doesn't overflow the border radius */
-    }
-        
-        
-        @media (max-width: 800px) {
-            .container {
-                flex-direction: column;
-            }
-            .content, .empty {
-                width: 100%;
-            }
-            
+        /* Styles pour les graphiques */
+        .chart-container { width: 100%; max-width: 900px; margin: 0 auto; padding: 1rem; position: relative; height: 250px !important; overflow: hidden; }
+        .date-picker-container { text-align: center; margin: 10px 0; }
+        .date-picker { width: 250px; padding: 10px; font-size: 16px; color: black; font-weight: 500; border: 2px solid #E5E7EB; border-radius: 10px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #f9fafb; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .date-picker:hover { border-color: #0072ff; cursor: pointer; }
+        .date-picker:focus { outline: none; border-color: #00c6ff; box-shadow: 0 1px 3px rgba(0, 198, 255, 0.7); }
+        body.dark .date-picker { color: #fff; border: 2px solid #232342; background-color: #151529; box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1); }
+        body.dark .date-picker:focus { border-color: #4e9af1; box-shadow: 0 1px 5px rgba(78, 154, 241, 0.3); }
+        .chart-title { text-align: center; font-size: 18px; margin-bottom: 10px; }
+        canvas { width: 100% !important; height: auto !important; }
+        .canvas-wrapper { overflow-x: auto; padding-bottom: 1rem; }
+        @media (max-width: 768px) {
+            .chart-container { padding: 0; }
+            .date-picker-container { text-align: center; margin: 5px 0; }
+            .date-picker { width: 180px; padding: 8px; font-size: 12px; }
+            .chart-title { font-size: 16px; }
+            .flatpickr-calendar { width: 70% !important; max-width: 305px; margin: 0 auto; }
+            .flatpickr-day { width: 6px; height: 25px; line-height: 25px; font-size: 12px; }
+            .flatpickr-monthDropdown-months, .flatpickr-current-month input.cur-year { font-size: 12px; }
+            .flatpickr-time { font-size: 12px; }
+            .flatpickr-prev-month, .flatpickr-next-month { padding: 5px; }
         }
     </style>
 </head>
+
+<!-- Corps principal de la page -->
 <body>
     <div class="container">
+        <!-- Première colonne de contenu -->
         <div class="content">
             <div class="table-data">
                 <div class="order">
-                    <div class="chart-title">
-                        Etat de commandes
-                    </div>
-                    <div class="date-picker-container">
-                        <input type="text" id="dateRangePicker" class="date-picker" placeholder="Sélectionnez la plage de dates" />
-                    </div>
-                    <div class="chart-container">
-                        
-                        <canvas id="myChart"></canvas>
-                        
-                    </div>
-                    
+                    <div class="chart-title">Etat de commandes</div>
+                    <!-- Sélecteur de plage de dates -->
+                    <div class="date-picker-container"><input type="text" id="dateRangePicker" class="date-picker" placeholder="Sélectionnez la plage de dates" /></div>
+                    <!-- Affichage du graphique -->
+                    <div class="chart-container"><canvas id="myChart"></canvas></div>
                 </div>
             </div>
         </div>
+        <!-- Deuxième colonne pour la carte -->
         <div class="empty">
-                <div class="table-data">
-                    <div class="order">
-                        <div class="chart-title">
-                            Géolocalisation des livreurs
-                        </div> 
-                        
-                        <div id="map-container">
-                            <div id="map" style="height: 100%; width: 100%;"></div>
-                        </div>    
-                    </div>
+            <div class="table-data">
+                <div class="order">
+                    <div class="chart-title">Géolocalisation des livreurs</div>
+                    <!-- Carte avec géolocalisation -->
+                    <div id="map-container"><div id="map" style="height: 100%; width: 100%;"></div></div>
                 </div>
+            </div>
         </div>
     </div>
-    
+
+    <!-- Chargement des bibliothèques externes -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        flatpickr("#dateRangePicker", {
-            mode: "range",
-            locale: "fr"
-        });
 
+    <!-- Initialisation du sélecteur de date -->
+    <script>
+        flatpickr("#dateRangePicker", { mode: "range", locale: "fr" });
     </script>
 
-<head>
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-</head>
+    <!-- Bibliothèques pour la carte -->
+    <head>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    </head>
+
+    <!-- Script de géolocalisation des livreurs -->
     <script>
-        // Initialize Firebase
-        
-        const firebaseConfig = {
-
-apiKey: "AIzaSyCmHYYq7MnSqPYmKCKcBT1AdX5-QH4RF6s",
-
-authDomain: "dash-9656d.firebaseapp.com",
-
-projectId: "dash-9656d",
-
-storageBucket: "dash-9656d.firebasestorage.app",
-
-messagingSenderId: "1077992632904",
-
-appId: "1:1077992632904:web:992bb83a7c523c193f9e7d",
-
-measurementId: "G-MDBQJENVJF"
-
-};
-
-
+        const firebaseConfig = { 
+            apiKey: "AIzaSyCmHYYq7MnSqPYmKCKcBT1AdX5-QH4RF6s", 
+            authDomain: "dash-9656d.firebaseapp.com", 
+            projectId: "dash-9656d", 
+            storageBucket: "dash-9656d.firebasestorage.app", 
+            messagingSenderId: "1077992632904", 
+            appId: "1:1077992632904:web:992bb83a7c523c193f9e7d", 
+            measurementId: "G-MDBQJENVJF" 
+        };
         firebase.initializeApp(firebaseConfig);
-
         var db = firebase.firestore();
-
-        // Initialize the map
-        var map = L.map('map').setView([0, 0], 2);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Fetch locations from Firebase and add them to the map
+        var map = L.map('map').setView([46.603354, 1.888334], 4);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(map);
+        
+        // Surveillance des données de localisation
         db.collection("locations").onSnapshot((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 var location = doc.data();
-                L.marker([location.latitude, location.longitude])
-                    .addTo(map)
-                    .bindPopup(location.name);
+                L.marker([location.latitude, location.longitude]).addTo(map).bindPopup(location.name);
             });
         });
     </script>
 
+    <!-- Script pour la mise à jour du graphique en fonction de la plage de dates -->
+    <script>
+        const allData = { 
+            labels: {{dates|safe}}, 
+            datasets: [ 
+                { label: 'Livré', data: {{livre|safe}}, backgroundColor: '#28a745', borderColor: 'rgba(40, 167, 69, 1)', borderWidth: 1, barThickness: 17 },
+                { label: 'Annulé', data: {{annule|safe}}, backgroundColor: '#FD7238', borderColor: 'rgba(253, 114, 56, 1)', borderWidth: 1, barThickness: 17 },
+                { label: 'En cours', data: {{en_cours|safe}}, backgroundColor: '#007bff', borderColor: 'rgba(0, 123, 255, 1)', borderWidth: 1, barThickness: 17 }
+            ]
+        };
 
-    
-    
-</body>
-<style>
-    /* Centrer le graphique et les éléments de saisie */
-    .chart-container {
-        width: 100%;
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 1rem;
-        position: relative;
-        height: 250px !important; /* Or any fixed height */
-        overflow: hidden; 
-    }
-   
-
-    /* Style pour le conteneur du sélecteur de date */
-    .date-picker-container {
-        text-align: center;
-        margin: 10px 0;
-    }
-
-    /* Style pour l'entrée du sélecteur de date */
-    .date-picker {
-        width: 250px;
-        padding: 10px;
-        font-size: 16px;
-        color: black;
-        font-weight: 500;
-        border: 2px solid #E5E7EB;
-        border-radius: 10px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        background-color: #f9fafb;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    /* Effet au survol du sélecteur de date */
-    .date-picker:hover {
-        border-color: #0072ff;
-        cursor: pointer;
-    }
-
-    /* Effet de focus sur le sélecteur de date */
-    .date-picker:focus {
-        outline: none;
-        border-color: #00c6ff;
-        box-shadow: 0 1px 3px rgba(0, 198, 255, 0.7);
-    }
-
-    /* Dark mode */
-    body.dark .date-picker {
-        color: #fff; /* White text for readability */
-        border: 2px solid  #232342;; /* Darker border */
-        background-color:  #151529;; /* Darker background */
-        box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1); /* Lighter shadow */
-    }
-
-    body.dark .date-picker:focus {
-        border-color: #4e9af1; /* Lighter blue when focused in dark mode */
-        box-shadow: 0 1px 5px rgba(78, 154, 241, 0.3); /* Focus shadow with blue hue */
-    }
-
-    /* Titre du graphique */
-    .chart-title {
-        text-align: center;
-        font-size: 18px;
-        margin-bottom: 10px;
-        
-    }
-
-    /* Style pour le canevas du graphique */
-    canvas {
-        width: 100% !important;
-        height: auto !important;
-        
-    }
-
-    /* Ajouter un style pour le wrapper du canvas pour le rendre scrollable horizontalement sur les petits écrans */
-    .canvas-wrapper {
-        overflow-x: auto;
-        padding-bottom: 1rem;
-    }
-
-  
-    
-    
-
-    @media (max-width: 768px) {
-    .chart-container {
-        padding: 0; /* Réduire les marges sur les petits écrans */
-    }
-
-    .date-picker-container {
-        text-align: center;
-        margin: 5px 0;
-    }
-
-    .date-picker {
-        width: 180px; /* Ajuster la largeur du sélecteur de date */
-        padding: 8px;
-        font-size: 12px; /* Réduire la taille de la police sur les petits écrans */
-    }
-
-    .chart-title {
-        font-size: 16px; /* Réduire la taille du titre sur les petits écrans */
-    }
-}
-</style>
-
-<script>
-    // Données exemple pour le graphique
-    const allData = {
-        labels: {{dates|safe}},
-        datasets: [
-            {
-                label: 'Livré',
-                data: {{livre|safe}},
-                backgroundColor: '#28a745',  // Changer la couleur du vert en #28a745
-                borderColor: 'rgba(40, 167, 69, 1)',
-                borderWidth: 1,
-                barThickness: 17 // Make the bars thin
-            },
-            {
-                label: 'Annulé',
-                data: {{annule|safe}},
-                backgroundColor: '#FD7238',  
-                borderColor: 'rgba(253, 114, 56, 1)',
-                borderWidth: 1,
-                barThickness: 17 // Make the bars thin
-            },
-            {
-                label: 'En cours',
-                data: {{en_cours|safe}},
-                backgroundColor: '#007bff',  // Changer la couleur jaune en #007bff
-                borderColor: 'rgba(0, 123, 255, 1)',
-                borderWidth: 1,
-                barThickness: 17 // Make the bars thin
-            }
-        ]
-    };
-
-    let chartData = {...allData}; // Cloner les données initiales
-
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: chartData,
-        options: {
-            
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                position: 'top',
-                labels: {
-                    boxWidth: 10, // Size of the square
-                    boxHeight: 10, // Ensure it remains a square
-                    usePointStyle: true, // Use custom styles for the legend
-                    pointStyle: 'rect' // Ensure the legend icons are squares
-                }
-                },
-                tooltip: {
-                    enabled: true
-                }
-            },
-            scales: {
-                x: {
-                    stacked: true,
-                    grid: {
-                        display: false // Remove grid lines from the x-axis
-                    },
-                    ticks: {
-                        maxRotation: 0, // Disable rotation on x-axis labels
-                        minRotation: 0,
-                        autoSkip: true,
-                        maxTicksLimit: 5 // Show a limited number of labels to avoid clutter
-                    }
-                },
-                y: {
-                    stacked: true,
-                    beginAtZero: true,
-                    grid: {
-                        display: false // Remove grid lines from the y-axis
-                    },
-                    ticks: {
-                        suggestedMin: 0, 
-                        suggestedMax: 10, 
-                        stepSize: 1,  // Adjust step size to make the axis values more granular
-                       
-                    }
+        let chartData = {...allData};
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { boxWidth: 10, boxHeight: 10, usePointStyle: true, pointStyle: 'rect' } }, tooltip: { enabled: true } },
+                scales: { 
+                    x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 0, minRotation: 0, autoSkip: true, maxTicksLimit: 5 } },
+                    y: { stacked: true, beginAtZero: true, grid: { display: false }, ticks: { suggestedMin: 0, suggestedMax: 10, stepSize: 1 } }
                 }
             }
-        }
-    });
+        });
 
-    // Initialiser le sélecteur de plage de dates avec flatpickr
-    flatpickr("#dateRangePicker", {
-        mode: "range",
-        dateFormat: "Y-m-d",
-        locale: "fr", // Définir la locale sur "fr" pour le français
-        onChange: function(selectedDates) {
-            if (selectedDates.length === 2) {
-                const startDate = selectedDates[0];
-                const endDate = selectedDates[1];
-
-                // Filtrer les données en fonction de la plage sélectionnée
-                const filteredLabels = allData.labels.filter(date => {
-                    const dateObj = new Date(date);
-                    return dateObj >= startDate && dateObj <= endDate;
-                });
-
-                const filteredData = allData.datasets.map(dataset => {
-                    const filteredDatasetData = dataset.data.filter((data, index) => {
-                        const date = new Date(allData.labels[index]);
-                        return date >= startDate && date <= endDate;
+        // Mise à jour du graphique lors de la sélection d'une plage de dates
+        flatpickr("#dateRangePicker", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            locale: "fr",
+            onChange: function(selectedDates) {
+                if (selectedDates.length === 2) {
+                    const startDate = selectedDates[0];
+                    const endDate = selectedDates[1];
+                    const filteredLabels = allData.labels.filter(date => { 
+                        const dateObj = new Date(date); 
+                        return dateObj >= startDate && dateObj <= endDate; 
                     });
-                    return {
-                        ...dataset,
-                        data: filteredDatasetData
-                    };
-                });
-
-                // Mettre à jour les données du graphique avec les données filtrées
-                myChart.data.labels = filteredLabels;
-                myChart.data.datasets = filteredData;
-                myChart.update();
+                    const filteredData = allData.datasets.map(dataset => {
+                        const filteredDatasetData = dataset.data.filter((data, index) => {
+                            const date = new Date(allData.labels[index]);
+                            return date >= startDate && date <= endDate;
+                        });
+                        return { ...dataset, data: filteredDatasetData };
+                    });
+                    myChart.data.labels = filteredLabels;
+                    myChart.data.datasets = filteredData;
+                    myChart.update();
+                }
             }
-        }
-    });
+        });
+    </script>
 
-    // Fonction pour redimensionner le graphique
-    
-
-    
-</script>
 {% endblock %}

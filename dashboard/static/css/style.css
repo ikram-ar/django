@@ -81,7 +81,10 @@ body {
     z-index: 500;
     padding-bottom: 20px;
     box-sizing: content-box;
+    margin-left: 20px;
+    text-decoration: none;
 }
+
 
 #sidebar .brand .bx {
     min-width: 60px;
@@ -156,6 +159,15 @@ body {
     min-width: calc(60px  - ((4px + 6px) * 2));
     display: flex;
     justify-content: center;
+}
+#sidebar .side-menu li a {
+    text-decoration: none !important;
+}
+
+#sidebar .side-menu li a:focus,
+#sidebar .side-menu li a:active {
+    text-decoration: none !important;
+    outline: none;
 }
 /* SIDEBAR */
 @media (max-width: 768px) {
@@ -645,6 +657,8 @@ body {
     }
 
 }
+
+
 
 
 

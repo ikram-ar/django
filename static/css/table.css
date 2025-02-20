@@ -1,0 +1,132 @@
+/* Table Styles */
+.table-responsive {
+    max-height: 500px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+#users-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#users-table th,
+#users-table td {
+    text-align: center;
+    vertical-align: middle;
+    color: #53595e;
+}
+
+/* Search Filter Styles */
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    margin-top: 3%;
+}
+
+.dataTables_filter input {
+    width: 250px;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.dataTables_filter input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Button Styles */
+.btn-custom-green {
+    background-color: green;
+    color: white;
+    border: none;
+    margin-top: 3%;
+}
+
+.btn-custom-green:hover {
+    background-color: #218838;
+}
+
+.pen-btn i {
+    color: blue;
+}
+
+.trash-btn i {
+    color: red;
+}
+
+.pen-btn i:hover,
+.trash-btn i:hover {
+    color: white;
+}
+
+.pen-btn,
+.trash-btn {
+    background-color: transparent;
+    border: none;
+}
+
+/* Responsive Styles */
+@media (max-width: 800px) {
+    .dataTables_wrapper .dataTables_filter {
+        float: left;
+        width: 100%;
+        margin-top: 10px;
+        padding-top: 15px;
+    }
+
+    .dataTables_filter input {
+        width: calc(100% - 16px);
+        margin-bottom: 10px;
+        height: 19px;
+        margin-top: 25px;
+        width: 120px;
+        margin-left: 10px;
+    }
+
+    .btn-custom-green {
+        font-size: small;
+    }
+
+    #users-table th,
+    #users-table td {
+        font-size: 15px;
+        padding: 6px !important;
+    }
+
+    .pen-btn,
+    .trash-btn {
+        padding: 4px 8px;
+    }
+
+    .pen-btn i,
+    .trash-btn i {
+        font-size: 12px;
+    }
+
+    .modal-dialog {
+        max-width: 60%;
+        margin: 10px auto;
+    }
+
+    .modal-content {
+        border-radius: 5px;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 10px;
+    }
+
+    .modal-title {
+        font-size: 16px;
+    }
+
+    .modal-footer .btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}

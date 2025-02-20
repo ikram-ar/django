@@ -15,8 +15,28 @@ allSideMenu.forEach(item => {
 const menuBar = document.querySelector('#content nav .bx.bx-menu');
 const sidebar = document.getElementById('sidebar');
 
-menuBar.addEventListener('click', function () {
+// Function to toggle the sidebar and save its state
+function toggleSidebar() {
     sidebar.classList.toggle('hide');
+    // Save the sidebar state in localStorage
+    if (sidebar.classList.contains('hide')) {
+        localStorage.setItem('sidebarState', 'hidden');
+    } else {
+        localStorage.setItem('sidebarState', 'visible');
+    }
+}
+
+// Add event listener to the menu bar
+menuBar.addEventListener('click', toggleSidebar);
+
+// Restore the sidebar state on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebarState = localStorage.getItem('sidebarState');
+    if (sidebarState === 'hidden') {
+        sidebar.classList.add('hide'); // Hide the sidebar if it was hidden
+    } else {
+        sidebar.classList.remove('hide'); // Show the sidebar if it was visible
+    }
 });
 
 
@@ -28,10 +48,16 @@ const switchMode = document.getElementById('switch-mode');
 document.addEventListener('DOMContentLoaded', () => {
     const darkMode = localStorage.getItem('darkMode');
     if (darkMode === 'enabled') {
-        document.body.classList.add('dark');
+        // Apply dark mode by setting CSS variables
+        document.documentElement.style.setProperty('--light', '#0C0C1E');
+        document.documentElement.style.setProperty('--grey', '#060714');
+        document.documentElement.style.setProperty('--dark', '#FBFBFB');
         switchMode.checked = true;
     } else {
-        document.body.classList.remove('dark');
+        // Apply light mode by resetting CSS variables
+        document.documentElement.style.setProperty('--light', '#F9F9F9');
+        document.documentElement.style.setProperty('--grey', '#eee');
+        document.documentElement.style.setProperty('--dark', '#342E37');
         switchMode.checked = false;
     }
 });
@@ -39,10 +65,16 @@ document.addEventListener('DOMContentLoaded', () => {
 // Basculer le mode sombre et enregistrer dans localStorage
 switchMode.addEventListener('change', function () {
     if (this.checked) {
-        document.body.classList.add('dark');
+        // Apply dark mode
+        document.documentElement.style.setProperty('--light', '#0C0C1E');
+        document.documentElement.style.setProperty('--grey', '#060714');
+        document.documentElement.style.setProperty('--dark', '#FBFBFB');
         localStorage.setItem('darkMode', 'enabled'); // Enregistrer le mode sombre activé
     } else {
-        document.body.classList.remove('dark');
+        // Apply light mode
+        document.documentElement.style.setProperty('--light', '#F9F9F9');
+        document.documentElement.style.setProperty('--grey', '#eee');
+        document.documentElement.style.setProperty('--dark', '#342E37');
         localStorage.setItem('darkMode', 'disabled'); // Enregistrer le mode clair
     }
 });

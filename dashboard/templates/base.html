@@ -1,39 +1,33 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Boxicons -->
-    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="https://cdn.lineicons.com/3.0/lineicons.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>{% block title %}Logo{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <!-- Inline JavaScript to Apply Dark Mode Before Page Renders -->
+    <!-- External CSS Libraries -->
+    <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/3.0/lineicons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Inline JavaScript for Dark Mode -->
     <script>
-        // Check localStorage for dark mode preference
         const savedMode = localStorage.getItem('darkMode');
         if (savedMode === 'enabled') {
-            // Apply dark mode by setting CSS variables directly
             document.documentElement.style.setProperty('--light', '#0C0C1E');
             document.documentElement.style.setProperty('--grey', '#060714');
             document.documentElement.style.setProperty('--dark', '#FBFBFB');
         }
-        
     </script>
-    
 </head>
 <body>
-
 
 <!-- SIDEBAR -->
 <section id="sidebar">
     <a href="#" class="brand">
-        <i></i>
-        <span class="text">Logo</span>
+        <span class="text">Lo</span>
     </a>
     <ul class="side-menu top">
         <li class="{% if current_section == 'dashboard' %}active{% endif %}">
@@ -45,7 +39,7 @@
         <li class="{% if current_section == 'etablissement' %}active{% endif %}">
             <a href="{% url 'dashboard:etablissement' %}">
                 <i class='bx bxs-store'></i>
-                <span class="text">Etablissement</span>
+                <span class="text">Établissement</span>
             </a>
         </li>
         <li class="{% if current_section == 'utilisateur' %}active{% endif %}">
@@ -70,50 +64,29 @@
         </li>
     </ul>
 </section>
-<!-- SIDEBAR -->
 
 <!-- CONTENT -->
 <section id="content">
     <!-- NAVBAR -->
     <nav>
         <i class='bx bx-menu'></i>
-        <form action="#" class="d-flex justify-content-start">
-            <div class="form-input">
-                
-            </div>
+        <form action="#">
+            <div class="form-input"></div>
         </form>
-
         <input type="checkbox" id="switch-mode" hidden>
         <label for="switch-mode" class="switch-mode"></label>
     </nav>
-    <!-- NAVBAR -->
 
     <!-- MAIN CONTENT -->
     <main>
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
-    <!-- MAIN CONTENT -->
 </section>
-<!-- CONTENT -->
 
+<!-- External JavaScript -->
 <script src="{% static 'js/script.js' %}"></script>
 
-<!-- Inline JavaScript for Interactive Search Filtering with Bold Matching Text -->
 
-
-<style>
-    /* CSS for Enhanced Search Results Display with Bold Matching Text */
-    
-    a:hover {
-        text-decoration: none;
-    }
-    .no-underline:hover {
-        text-decoration: none;
-    }
-    
-    
-</style>
 
 </body>
 </html>
